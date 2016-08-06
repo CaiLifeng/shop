@@ -1,0 +1,8 @@
+{
+  "apps": [
+    {
+      "name": "api",
+      "script": "build/bin/www.js",
+      "watch": false
+    }]
+}
