@@ -2,13 +2,15 @@ import React from 'react';
 import {Link,History} from 'react-router';
 import classNames from 'classnames';
 import {Toast} from 'react-weui';
-import axios from 'axios'
+import axios from 'axios';
+import apiUrl from '../apiUrl.js';
+import { browserHistory } from 'react-router';
 
 
 export default class Login extends React.Component {
     state={
         telephone:'',
-        identifyCodeText:'获取验证码',
+        verifyCodeText:'获取验证码',
         isDisabled:true,
         showConfirm:false,
         confirmText:''
@@ -29,10 +31,42 @@ export default class Login extends React.Component {
     }
 
     submit(){
-        if(!this.refs.identifyCode.value){
+        var that=this;
+        if(!this.refs.verifyCode.value){
             this.setState({
                 showConfirm:true,
                 confirmText:'请填写验证码'
+            });
+        }
+        else{
+            axios.post(apiUrl.login, {
+                telephone:this.refs.telephone.value,
+                verifyCode:this.refs.verifyCode.value
+            })
+            .then(function (response) {
+                console.log(response);
+                    if(response.data.resultCode==1){
+                        localStorage.setItem('token',response.data.token);
+                        localStorage.setItem('user',JSON.stringify(response.data.user));
+                        browserHistory.push('/products');
+                    }
+                    else{
+                        that.setState({
+                            showConfirm:true,
+                            confirmText:response.data.resultMsg
+                        });
+
+                        setTimeout(function(){
+                            that.setState({
+                                showConfirm:false,
+                                confirmText:''
+                            });
+                        }.bind(this),2000);
+                    }
+
+            })
+            .catch(function (error) {
+                console.log(error);
             });
         }
         setTimeout(function(){
@@ -44,34 +78,31 @@ export default class Login extends React.Component {
 
     }
 
-    getIdentifyCode(){
-        //http://120.24.94.126/health/user/sendRanCode
+    getverifyCode(){
+        axios.post(apiUrl.getVerifyCode, {
+            telephone:this.refs.telephone.value
+        })
+        .then(function (response) {
+            console.log(response);
 
-        //axios.post('/ranCode', {
-        //
-        //})
-        //.then(function (response) {
-        //    console.log(response);
-        //})
-        //.catch(function (error) {
-        //    console.log(error);
-        //});
+            this.setState({verifyCodeText:'5',isDisabled:true});
+            let text=5;
+            let interval = setInterval(function(){
+                if(text==0){
+                    clearInterval(interval);
+                    this.setState({verifyCodeText:'获取验证码',isDisabled:false});
+                }
+                else{
+                    text--;
+                    this.setState({verifyCodeText:text});
+                }
+            }.bind(this),1000);
+        })
+        .catch(function (error) {
+            console.log(error);
+        });
 
 
-        let telephone=this.refs.telephone.value;
-        console.log(telephone);
-        this.setState({identifyCodeText:'5',isDisabled:true});
-        let text=5;
-        let interval = setInterval(function(){
-            if(text==0){
-                clearInterval(interval);
-                this.setState({identifyCodeText:'获取验证码',isDisabled:false});
-            }
-            else{
-                text--;
-                this.setState({identifyCodeText:text});
-            }
-        }.bind(this),1000);
     }
 
     render() {
@@ -96,10 +127,10 @@ export default class Login extends React.Component {
                     <div className="weui_cell weui_vcode">
                         <div className="weui_cell_hd"><label className="weui_label">验证码</label></div>
                         <div className="weui_cell_bd weui_cell_primary">
-                            <input className="weui_input" type="number" ref="identifyCode" placeholder="请输入验证码"/>
+                            <input className="weui_input" type="number" ref="verifyCode" placeholder="请输入验证码"/>
                         </div>
                         <div className="weui_cell_ft">
-                            <button className={clz} disabled={isDisabled} style={{'width':'118px'}}  onClick={this.getIdentifyCode.bind(this)}>{this.state.identifyCodeText}</button>
+                            <button className={clz} disabled={isDisabled} style={{'width':'118px'}}  onClick={this.getverifyCode.bind(this)}>{this.state.verifyCodeText}</button>
                         </div>
                     </div>
                 </div>
@@ -108,8 +139,8 @@ export default class Login extends React.Component {
                     <a className="weui_btn weui_btn_primary" onClick={this.submit.bind(this)} href="javascript:">确定</a>
                 </div>
 
-                <Toast show={this.state.showConfirm} icon="warn" iconSize="large">
-                    请填写验证码
+                <Toast show={this.state.showConfirm}>
+                    {this.state.confirmText}
                 </Toast>
             </div>
         );

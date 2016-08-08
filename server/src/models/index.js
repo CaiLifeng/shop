@@ -11,7 +11,8 @@ const UserSchema = new Schema({
     telephone:{type:String},
     accessToken: {type: String},
     image:{type:String},
-    sid:{type:String}
+    sid:{type:String},
+    verifyCode:{type:String}
 });
 
 

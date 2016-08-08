@@ -1,9 +1,6 @@
 import React from 'react';
 import classNames from 'classnames';
 
-
-
-
 export default class FilterBar extends React.Component {
     state={
         index:0,

@@ -11,30 +11,49 @@ var expressJwt = require('express-jwt');
 var middlewares=require('../middlewares/index');
 var request=require('request');
 
+
 //登陆接口，不需要用到jwt验证
 router.post('/login',function(req,res,next){
-    var name=req.body.name;
-    var passWord=req.body.passWord;
+    var telephone=req.body.telephone;
+    var verifyCode=req.body.verifyCode;
 
-    User.findOne({name: name, passWord: passWord}, function(err, user) {
-        if (err) {
+    User.findOne({telephone: telephone}, function(err1, user1) {
+        if (err1) {
             res.json({
                 resultCode: 0,
-                resultMsg: err
+                resultMsg: err1
             });
         } else {
-            if (user) {
-                var token=jwt.sign({name:name,userId:user.ObjectId}, config.secretKey);
-                res.json({
-                    resultCode: 1,
-                    user:user,
-                    token: token
+            if (user1) {
+                User.findOne({telephone: telephone, verifyCode: verifyCode}, function(err2, user2) {
+                    if(err2){
+                        res.json({
+                            resultCode: 0,
+                            resultMsg: err2
+                        });
+                    }
+                    else{
+                        if(user2){
+                            var token=jwt.sign({telephone:telephone,userId:user2.ObjectId}, config.secretKey);
+                            res.json({
+                                resultCode: 1,
+                                user:user2,
+                                token: token
+                            });
+                        }
+                        else{
+                            res.json({
+                                resultCode:0,
+                                resultMsg:'验证码错误'
+                            });
+                        }
+                    }
                 });
             }
             else{
                 res.json({
                     resultCode:0,
-                    resultMsg:'用户名密码错误'
+                    resultMsg:'手机号码错误'
                 });
             }
         }
@@ -43,7 +62,7 @@ router.post('/login',function(req,res,next){
 
 
 //获取验证码
-router.post('/getRanCode',function(req,res,next){
+router.post('/getVerifyCode',function(req,res,next){
     if(!req.body.telephone){
         res.json({
             resultCode: 0,
@@ -55,25 +74,58 @@ router.post('/getRanCode',function(req,res,next){
     request.post({url:'https://sms.yunpian.com/v2/sms/single_send.json', form: {apikey:config.yunPianKey,mobile:req.body.telephone,text:'【微信商城】您的验证码是'+randomCode}}, function(err,response,body){
         body=JSON.parse(body);
         if(body.code==0){
-            //把sid存入数据库
-            var user=new User({
-                telephone:req.body.telephone,
-                sid:body.sid
-            });
-
-            //保存到数据库
-            user.save(function(err){
+            //查看是否存在此用户
+            User.findOne({telephone: req.body.telephone}, function(err, user) {
                 if(err){
                     res.json({
-                        resultCode:0,
-                        resultMsg:err
+                        resultCode: 0,
+                        resultMsg: err
                     });
                 }
                 else{
-                    res.json({
-                        resultCode:1,
-                        sid:body.sid
-                    });
+                    if(user){
+                        user.verifyCode=randomCode;
+                        user.save(function(err){
+                            if(err){
+                                res.json({
+                                    resultCode:0,
+                                    resultMsg:err
+                                });
+                            }
+                            else{
+                                res.json({
+                                    resultCode:1,
+                                    sid:body.sid,
+                                    verifyCode:randomCode
+                                });
+                            }
+                        });
+                    }
+                    else{
+                        //把验证码存入数据库
+                        var user1=new User({
+                            telephone:req.body.telephone,
+                            verifyCode:randomCode,
+                            sid:body.sid
+                        });
+
+                        //保存到数据库
+                        user1.save(function(err){
+                            if(err){
+                                res.json({
+                                    resultCode:0,
+                                    resultMsg:err
+                                });
+                            }
+                            else{
+                                res.json({
+                                    resultCode:1,
+                                    sid:body.sid,
+                                    verifyCode:randomCode
+                                });
+                            }
+                        });
+                    }
                 }
             });
         }

@@ -11,9 +11,12 @@ module.exports = {
     contentBase: './app',
     port: 3001,
     proxy: {
-      '/proxy/api/': {
-        target: 'localhost:3000',
-        secure: false
+      '/api/*': {
+          target: 'http://localhost:3000/api/',
+          secure: false,
+          rewrite: function(req) {
+            req.url = req.url.replace(/^\/api/, '');
+          }
       }
     }
   },
