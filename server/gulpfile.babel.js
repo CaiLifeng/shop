@@ -8,15 +8,15 @@ import clean from 'gulp-rimraf';
 import pm2 from 'pm2';
 
 gulp.task('build:code', () => {
-    return gulp.src(['src/**/*.js','!src/**/*-compiled.js'])//忽略webstorm下面自动生成的compiled文件
+    return gulp.src(['src/**/*.js', '!src/**/*-compiled.js'])//忽略webstorm下面自动生成的compiled文件
         .pipe(babel())
         .pipe(gulp.dest('build'));
 });
 
 
 gulp.task('watch', function () {
-    gulp.watch(['src/**/*.js','!src/**/*-compiled.js'], ['build:code','run']);
-} );
+    gulp.watch(['src/**/*.js', '!src/**/*-compiled.js'], ['build:code', 'run']);
+});
 
 gulp.task('pm2:restart', function () {
     pm2.connect(true, function () {
@@ -39,6 +39,6 @@ gulp.task('run', function () {
 
 //清楚build文件夹
 gulp.task('clean', function () {
-    return gulp.src( ['build'], { read: false } )
+    return gulp.src(['build'], {read: false})
         .pipe(clean());
-} );
+});

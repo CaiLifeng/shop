@@ -1,169 +1,17 @@
 import React from 'react';
-import Product from './Product'
+import Product from './Product';
+import axios from 'axios';
+import config from '../../config.js'
 
 export default class Products extends React.Component {
+
     render() {
-        let data=[
-            {
-                imgSrc:'http://192.168.3.7:8081/avatar/o/121/14589724391397.jpg',
-                title:'你手机的飞机',
-                digest:'121215jsdjlfkj 角色等级分类'
+        const {productList,...others} = this.props;
 
-            },
-            {
-                imgSrc:'http://192.168.3.7:8081/avatar/o/121/14589724391397.jpg',
-                title:'你手机的飞机',
-                digest:'121215jsdjlfkj 角色等级分类'
-
-            },
-            {
-                imgSrc:'http://192.168.3.7:8081/avatar/o/121/14589724391397.jpg',
-                title:'你手机的飞机',
-                digest:'121215jsdjlfkj 角色等级分类'
-
-            },
-            {
-                imgSrc:'http://192.168.3.7:8081/avatar/o/121/14589724391397.jpg',
-                title:'你手机的飞机',
-                digest:'121215jsdjlfkj 角色等级分类'
-
-            },
-            {
-                imgSrc:'http://192.168.3.7:8081/avatar/o/121/14589724391397.jpg',
-                title:'你手机的飞机',
-                digest:'121215jsdjlfkj 角色等级分类'
-
-            },
-            {
-                imgSrc:'http://192.168.3.7:8081/avatar/o/121/14589724391397.jpg',
-                title:'你手机的飞机',
-                digest:'121215jsdjlfkj 角色等级分类'
-
-            },
-            {
-                imgSrc:'http://192.168.3.7:8081/avatar/o/121/14589724391397.jpg',
-                title:'你手机的飞机',
-                digest:'121215jsdjlfkj 角色等级分类'
-
-            },
-            {
-                imgSrc:'http://192.168.3.7:8081/avatar/o/121/14589724391397.jpg',
-                title:'你手机的飞机',
-                digest:'121215jsdjlfkj 角色等级分类'
-
-            },
-            {
-                imgSrc:'http://192.168.3.7:8081/avatar/o/121/14589724391397.jpg',
-                title:'你手机的飞机',
-                digest:'121215jsdjlfkj 角色等级分类'
-
-            },
-            {
-                imgSrc:'http://192.168.3.7:8081/avatar/o/121/14589724391397.jpg',
-                title:'你手机的飞机',
-                digest:'121215jsdjlfkj 角色等级分类'
-
-            },
-            {
-                imgSrc:'http://192.168.3.7:8081/avatar/o/121/14589724391397.jpg',
-                title:'你手机的飞机',
-                digest:'121215jsdjlfkj 角色等级分类'
-
-            },
-            {
-                imgSrc:'http://192.168.3.7:8081/avatar/o/121/14589724391397.jpg',
-                title:'你手机的飞机',
-                digest:'121215jsdjlfkj 角色等级分类'
-
-            },
-            {
-                imgSrc:'http://192.168.3.7:8081/avatar/o/121/14589724391397.jpg',
-                title:'你手机的飞机',
-                digest:'121215jsdjlfkj 角色等级分类'
-
-            },
-            {
-                imgSrc:'http://192.168.3.7:8081/avatar/o/121/14589724391397.jpg',
-                title:'你手机的飞机',
-                digest:'121215jsdjlfkj 角色等级分类'
-
-            },
-            {
-                imgSrc:'http://192.168.3.7:8081/avatar/o/121/14589724391397.jpg',
-                title:'你手机的飞机',
-                digest:'121215jsdjlfkj 角色等级分类'
-
-            },
-            {
-                imgSrc:'http://192.168.3.7:8081/avatar/o/121/14589724391397.jpg',
-                title:'你手机的飞机',
-                digest:'121215jsdjlfkj 角色等级分类'
-
-            },
-            {
-                imgSrc:'http://192.168.3.7:8081/avatar/o/121/14589724391397.jpg',
-                title:'你手机的飞机',
-                digest:'121215jsdjlfkj 角色等级分类'
-
-            },
-            {
-                imgSrc:'http://192.168.3.7:8081/avatar/o/121/14589724391397.jpg',
-                title:'你手机的飞机',
-                digest:'121215jsdjlfkj 角色等级分类'
-
-            },
-            {
-                imgSrc:'http://192.168.3.7:8081/avatar/o/121/14589724391397.jpg',
-                title:'你手机的飞机',
-                digest:'121215jsdjlfkj 角色等级分类'
-
-            },
-            {
-                imgSrc:'http://192.168.3.7:8081/avatar/o/121/14589724391397.jpg',
-                title:'你手机的飞机',
-                digest:'121215jsdjlfkj 角色等级分类'
-
-            },
-            {
-                imgSrc:'http://192.168.3.7:8081/avatar/o/121/14589724391397.jpg',
-                title:'你手机的飞机',
-                digest:'121215jsdjlfkj 角色等级分类'
-
-            },
-            {
-                imgSrc:'http://192.168.3.7:8081/avatar/o/121/14589724391397.jpg',
-                title:'你手机的飞机',
-                digest:'121215jsdjlfkj 角色等级分类'
-
-            },
-            {
-                imgSrc:'http://192.168.3.7:8081/avatar/o/121/14589724391397.jpg',
-                title:'你手机的飞机',
-                digest:'121215jsdjlfkj 角色等级分类'
-
-            },
-            {
-                imgSrc:'http://192.168.3.7:8081/avatar/o/121/14589724391397.jpg',
-                title:'你手机的飞机',
-                digest:'121215jsdjlfkj 角色等级分类'
-
-            },
-            {
-                imgSrc:'http://192.168.3.7:8081/avatar/o/121/14589724391397.jpg',
-                title:'你手机的飞机',
-                digest:'121215jsdjlfkj 角色等级分类'
-
-            },
-            {
-                imgSrc:'http://192.168.3.7:8081/avatar/o/121/14589724391397.jpg',
-                title:'你手机的飞机',
-                digest:'121215jsdjlfkj 角色等级分类'
-
-            }
-        ];
-        var productsList = data.map(function (item,idx) {
+        var productsList = productList.map(function (item, idx) {
             return (
-                <Product imgSrc={item.imgSrc} key={idx} title={item.title} digest={item.digest}></Product>
+                <Product imgSrc={item.images[0]} key={idx} id={item._id} title={item.title}
+                         digest={item.description}></Product>
             );
         });
 

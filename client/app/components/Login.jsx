@@ -3,7 +3,7 @@ import {Link,History} from 'react-router';
 import classNames from 'classnames';
 import {Toast} from 'react-weui';
 import axios from 'axios';
-import apiUrl from '../apiUrl.js';
+import config from '../config.js';
 import { browserHistory } from 'react-router';
 
 
@@ -39,7 +39,7 @@ export default class Login extends React.Component {
             });
         }
         else{
-            axios.post(apiUrl.login, {
+            axios.post(configlogin, {
                 telephone:this.refs.telephone.value,
                 verifyCode:this.refs.verifyCode.value
             })
@@ -79,7 +79,7 @@ export default class Login extends React.Component {
     }
 
     getverifyCode(){
-        axios.post(apiUrl.getVerifyCode, {
+        axios.post(config.apiUrl.getVerifyCode, {
             telephone:this.refs.telephone.value
         })
         .then(function (response) {
