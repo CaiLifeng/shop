@@ -20,6 +20,8 @@ export default class Publish extends React.Component {
         toastText:''
     };
 
+    categoryList=config.categoryList;
+
     componentWillMount(){
         //获取定位
         if ("geolocation" in navigator) {
@@ -146,6 +148,14 @@ export default class Publish extends React.Component {
             images.push(item.sourceUrl);
         });
 
+        if(!description||!title||!price||!location||!category){
+            that.setState({showToast:true,toastText:'缺少验证参数'});
+            setTimeout(function(){
+                that.setState({showToast:false,toastText:''});
+            },1000);
+            return;
+        }
+
         axios.post(config.apiUrl.products,{
             title:title,
             price:price,
@@ -213,9 +223,9 @@ export default class Publish extends React.Component {
                     <div className="weui_cell weui_cell_select">
                         <div className="weui_cell_bd weui_cell_primary">
                             <select ref="category" className="weui_select" name="select1">
-                                <option value="微信号">微信号</option>
-                                <option value="QQ号">QQ号</option>
-                                <option value="Email">Email</option>
+                                {this.categoryList.map(function(item) {
+                                    return <option value={item}>{item}</option>;
+                                })}
                             </select>
                         </div>
                     </div>

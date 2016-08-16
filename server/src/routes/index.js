@@ -1,3 +1,4 @@
+'use strict'
 var express = require('express');
 var router = express.Router();
 var User = require('../models').User;
@@ -250,8 +251,6 @@ router.get('/products', expressJwt({secret: config.secretKey}), middlewares.auth
                     });
                 }
             });
-
-
         }
         else {
             res.json({
@@ -309,6 +308,87 @@ router.post('/getLocationInfo', function (req, res, next) {
             });
         }
     });
+});
+
+//获取所在城市的区列表
+router.get('/districts', function (req, res, next) {
+    var latitude = req.query.latitude;
+    var longitude = req.query.longitude;
+    if (!latitude || !longitude) {
+        res.json({
+            resultCode: 0,
+            resultMsg: '缺少验证参数'
+        });
+        return;
+    }
+    else {
+        request('http://api.map.baidu.com/geocoder/v2/?output=json&ak=u4doiw4efjtMPKYVPTeiTbFh&coordtype=wgs84ll&pois=0&location=' + latitude + ',' + longitude, function (error, response, body) {
+            if (!error && response.statusCode == 200) {
+                body = JSON.parse(body);
+                if (body.status == 0) {
+                    let city = body.result.addressComponent.city;
+                    //搜索城市下面的区
+                    Area.findOne({'name': city}, function (err, city) {
+                        if (!err) {
+                            if (city) {
+                                let code = city.code;
+                                Area.find({'pcode': code}, function (err, distincts) {
+                                    if (!err) {
+                                        if (distincts) {
+                                            let distinctList = [];
+                                            distincts.forEach(function (item, index, array) {
+                                                distinctList.push(item.name);
+                                            });
+                                            res.json({
+                                                resultCode: 1,
+                                                data: distinctList
+                                            });
+                                        }
+                                        else {
+                                            res.json({
+                                                resultCode: 0,
+                                                resultMsg: '此城市下面没有区'
+                                            });
+                                        }
+                                    }
+                                    else{
+                                        res.json({
+                                            resultCode: 0,
+                                            resultMsg: err
+                                        });
+                                    }
+                                });
+                            }
+                            else {
+                                res.json({
+                                    resultCode: 0,
+                                    resultMsg: '查找不到此城市'
+                                });
+                            }
+                        }
+                        else {
+                            res.json({
+                                resultCode: 0,
+                                resultMsg: err
+                            });
+                        }
+                    });
+                }
+                else {
+                    res.json({
+                        resultCode: 0,
+                        resultMsg: '接口出错'
+                    });
+                }
+            }
+            else {
+                res.json({
+                    resultCode: 0,
+                    resultMsg: '接口出错'
+                });
+            }
+        });
+    }
 });
 
 
