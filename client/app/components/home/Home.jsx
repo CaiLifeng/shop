@@ -12,31 +12,40 @@ export default class Home extends React.Component {
     state = {
         productList: [],
         city: '',
+        isMore: true,
         filterData: [{
             name: '区域',
+            type: 'address',
             id: '1',
-            data: ['不限']
+            data: ['不限'],
+            selected: ''
         }, {
             name: '品种',
+            type: 'category',
             id: '2',
-            data: config.categoryList
+            data: config.categoryList,
+            selected: ''
         }, {
             name: '方式',
             id: '3',
-            data: ['不限', '面交', '在线']
+            data: config.tradeType,
+            selected: ''
         }, {
             name: '价格',
             id: '4',
-            data: config.priceList
+            data: config.priceList,
+            selected: ''
         }]
     };
 
-    getProducts(pageSize=10,pageIndex=0) {
+    getProducts({pageIndex=0,pageSize=2}={}) {
         const that = this;
-        axios.get(config.apiUrl.products+'?pageSize='+pageSize+'&pageIndex='+pageIndex).then(function (response) {
+        axios.get(config.apiUrl.products + '?pageSize=' + pageSize + '&pageIndex=' + pageIndex).then(function (response) {
             if (response.status == 200) {
                 if (response.data.resultCode == 1) {
-                    console.log(response.data.data);
+                    if (response.data.pageCount === pageIndex + 1) {
+                        that.setState({isMore: false});
+                    }
                     that.setState({
                         productList: that.state.productList.concat(response.data.data)
                     });
@@ -44,6 +53,9 @@ export default class Home extends React.Component {
                 else {
                     console.log(response);
                 }
+            }
+            else {
+                console.log(response);
             }
         }).catch(function (error) {
             console.log(error);
@@ -60,16 +72,16 @@ export default class Home extends React.Component {
 
                 getFilterData();
                 function getFilterData() {
-                    axios.get(config.apiUrl.districts+'?latitude='+latitude+'&longitude='+longitude).then(function (response) {
+                    axios.get(config.apiUrl.districts + '?latitude=' + latitude + '&longitude=' + longitude).then(function (response) {
                         if (response.status == 200) {
                             if (response.data.resultCode == 1) {
                                 console.log(response);
-                                let districts=response.data.data;
-                                let filterDate=that.state.filterData.slice(0);
-                                filterDate[0].data=filterDate[0].data.concat(districts);
+                                let districts = response.data.data;
+                                let filterDate = that.state.filterData.slice(0);
+                                filterDate[0].data = filterDate[0].data.concat(districts);
 
                                 console.log(districts);
-                                that.setState({filterData:filterDate});
+                                that.setState({filterData: filterDate});
                             }
                             else {
                                 console.log(response);
@@ -81,11 +93,11 @@ export default class Home extends React.Component {
                     });
                 }
 
-            };
+            }
 
             function error() {
                 alert('定位失败');
-            };
+            }
             navigator.geolocation.getCurrentPosition(success, error);
         } else {
             alert('您的浏览器不支持定位');
@@ -97,11 +109,13 @@ export default class Home extends React.Component {
         this.getLocation();
     }
 
-    filterBarSelectChange(data){
+    filterBarSelectChange(data) {
+        console.log(data);
 
+        this.getProducts({});
     }
 
-    onMoreClick(pageIndex,pageSize){
+    onMoreClick(pageIndex, pageSize) {
 
     }
 
@@ -110,7 +124,8 @@ export default class Home extends React.Component {
             <div className="content">
                 <SearchBar/>
                 <FilterBar data={this.state.filterData} onSelectChange={this.filterBarSelectChange.bind(this)}/>
-                <Products data={this.state.productList} onMoreClick={this.getProducts.bind(this)}/>
+                <Products data={this.state.productList} isMore={this.state.isMore}
+                          onMoreClick={this.getProducts.bind(this)}/>
             </div>
         );
     }

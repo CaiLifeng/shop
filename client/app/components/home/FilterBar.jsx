@@ -15,45 +15,16 @@ export default class FilterBar extends React.Component {
     state = {
         index: 0,
         focus: false,
-        data:this.props.data,
-        selected: [
-            {
-                id: 1,
-                data: ''
-            },
-            {
-                id: 2,
-                data: ''
-            },
-            {
-                id: 3,
-                data: ''
-            },
-            {
-                id: 4,
-                data: ''
-            }
-        ],
-        city:''
+        data: this.props.data,
+        city: ''
     };
-
-
-    componentWillMount() {
-        const that=this;
-
-    }
-
-    componentDidMount() {
-
-    }
 
     handleExpandItemClick(idx, subItem, event) {
         let newState = Object.assign({}, this.state);
-        newState.data[idx].name = subItem;
-        newState.selected[idx].data = subItem;
+        newState.data[idx].selected = subItem;
         this.setState(newState);
-        if(this.props.onSelectChange){
-            this.props.onSelectChange(this.state.selected);
+        if (this.props.onSelectChange) {
+            this.props.onSelectChange(this.state.data);
         }
     }
 
@@ -74,7 +45,7 @@ export default class FilterBar extends React.Component {
     renderCloseItems(data) {
         let items = data.map((item, idx)=> {
             return <li className="tab" key={idx} onClick={this.handleHeaderClick.bind(this,item.id)}>
-                <span className="nav-font">{item.name}</span>
+                <span className="nav-font">{item.selected ? item.selected : item.name}</span>
                 <span className="icon-right">
                     <i className="fa fa-angle-down" aria-hidden="true"></i>
                 </span>
@@ -88,11 +59,6 @@ export default class FilterBar extends React.Component {
             </ul>
         );
     }
-
-    //shouldComponentUpdate(nextProps,nextState){
-    //    console.log(nextState);
-    //    return false;
-    //}
 
     renderExpendItems(data) {
         let items = data.map((item, idx)=> {

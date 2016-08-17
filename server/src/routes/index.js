@@ -241,7 +241,8 @@ router.get('/products', expressJwt({secret: config.secretKey}), middlewares.auth
                         data: data,
                         pageIndex: Number(req.query.pageIndex),
                         pageSize: Number(req.query.pageSize),
-                        pageCount: count
+                        pageCount: Math.ceil(count/req.query.pageSize),
+                        count:count
                     });
                 }
                 else {
