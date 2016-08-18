@@ -217,9 +217,12 @@ router.get('/products', expressJwt({secret: config.secretKey}), middlewares.auth
     var query = {};
     var start;
     var limit;
+    if(req.query.title){
+        query.title = new RegExp('.*' + req.query.title + '.*', "g");
+    }
     if (req.query.pageSize > 0 && req.query.pageIndex >= 0) {
-        start = Number(req.query.pageSize) * Number(req.query.pageIndex);
-        limit = Number(req.query.pageSize);
+        start = parseInt(req.query.pageSize) * parseInt(req.query.pageIndex);
+        limit = parseInt(req.query.pageSize);
     }
     if (req.query.address) {
         query.address = new RegExp('.*' + req.query.address + '.*', "g");
@@ -227,10 +230,14 @@ router.get('/products', expressJwt({secret: config.secretKey}), middlewares.auth
     if (req.query.category) {
         query.category = req.query.category
     }
-    if (req.query.priceMin >= 0 && req.query.priceMax >= 0) {
+    if (req.query.tradeType) {
+        query.tradeType = req.query.tradeType
+    }
+    if (parseInt(req.query.priceMin) >= 0 && parseInt(req.query.priceMax) >= 0) {
         query.price = {$gt: req.query.priceMin, $lt: req.query.priceMax}
     }
-
+    console.log(req.query);
+    console.log(query);
 
     Product.find(query).skip(start).limit(limit).exec(function (err, data) {
         if (!err) {
@@ -241,8 +248,8 @@ router.get('/products', expressJwt({secret: config.secretKey}), middlewares.auth
                         data: data,
                         pageIndex: Number(req.query.pageIndex),
                         pageSize: Number(req.query.pageSize),
-                        pageCount: Math.ceil(count/req.query.pageSize),
-                        count:count
+                        pageCount: Math.ceil(count / req.query.pageSize),
+                        count: count
                     });
                 }
                 else {
@@ -261,6 +268,9 @@ router.get('/products', expressJwt({secret: config.secretKey}), middlewares.auth
         }
     });
 });
+
+
+
 
 //获取七牛token
 router.get('/getQnToken', expressJwt({secret: config.secretKey}), middlewares.authError, function (req, res, next) {
@@ -352,7 +362,7 @@ router.get('/districts', function (req, res, next) {
                                             });
                                         }
                                     }
-                                    else{
+                                    else {
                                         res.json({
                                             resultCode: 0,
                                             resultMsg: err

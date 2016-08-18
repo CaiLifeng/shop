@@ -18,13 +18,13 @@ export default class Products extends React.Component {
 
 
     state={
-        pageIndex:0,
+        pageIndex:0
     };
 
     onMoreClick(){
         if(this.props.onMoreClick){
             this.state.pageIndex++;
-            this.props.onMoreClick({pageIndex:this.state.pageIndex,pageSize:2});
+            this.props.onMoreClick({pageIndex:this.state.pageIndex});
         }
     };
 

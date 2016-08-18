@@ -29,18 +29,21 @@ export default class Home extends React.Component {
             name: '方式',
             id: '3',
             data: config.tradeType,
-            selected: ''
+            selected: '',
+            type: 'tradeType'
         }, {
             name: '价格',
             id: '4',
             data: config.priceList,
-            selected: ''
+            selected: '',
+            type: 'price'
         }]
     };
 
-    getProducts({pageIndex=0,pageSize=2}={}) {
+    getProducts({pageIndex=0, address='', category='', priceMin='', priceMax='',tradeType='',title='',pageSize=10}) {
         const that = this;
-        axios.get(config.apiUrl.products + '?pageSize=' + pageSize + '&pageIndex=' + pageIndex).then(function (response) {
+        let url = config.apiUrl.products + '?pageSize=' + pageSize + '&pageIndex=' + pageIndex + '&address=' + address + '&category=' + category + '&priceMin=' + priceMin + '&priceMax=' + priceMax + '&tradeType=' + tradeType + '&title=' + title;
+        axios.get(url).then(function (response) {
             if (response.status == 200) {
                 if (response.data.resultCode == 1) {
                     if (response.data.pageCount === pageIndex + 1) {
@@ -92,12 +95,12 @@ export default class Home extends React.Component {
                         console.log(error);
                     });
                 }
-
             }
 
             function error() {
                 alert('定位失败');
             }
+
             navigator.geolocation.getCurrentPosition(success, error);
         } else {
             alert('您的浏览器不支持定位');
@@ -105,24 +108,49 @@ export default class Home extends React.Component {
     }
 
     componentWillMount() {
-        this.getProducts();
+        this.getProducts({pageIndex:0});
         this.getLocation();
     }
 
     filterBarSelectChange(data) {
-        console.log(data);
-
-        this.getProducts({});
+        this.setState({productList: []});
+        let params = {pageSize: 10, pageIndex: 0};
+        data.forEach(function (item, index, array) {
+            if (item.type == 'price') {
+                if (item.selected !== '不限') {
+                    params.priceMin = item.selected.split('~')[0];
+                    params.priceMax = item.selected.split('~')[1];
+                }
+            }
+            else {
+                params[item.type] = item.selected == '不限' ? '' : item.selected;
+            }
+        });
+        console.log(params);
+        this.getProducts(params);
     }
 
-    onMoreClick(pageIndex, pageSize) {
+    onMoreClick() {
+        this.getProducts();
+    }
 
+    handelSearch(text) {
+        console.log(text);
+            //this.state.productList=[];
+            //this.getProducts({title: text});
+    }
+
+    handelClear(text) {
+        this.state.filterData.forEach(function(item,index,array){
+            item.selected='';
+        });
     }
 
     render() {
         return (
             <div className="content">
-                <SearchBar/>
+                <SearchBar onChange={this.handelSearch.bind(this)} onClear={this.handelClear.bind(this)}
+                           placeholder="搜索标题"/>
                 <FilterBar data={this.state.filterData} onSelectChange={this.filterBarSelectChange.bind(this)}/>
                 <Products data={this.state.productList} isMore={this.state.isMore}
                           onMoreClick={this.getProducts.bind(this)}/>
