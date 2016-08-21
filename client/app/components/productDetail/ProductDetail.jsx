@@ -1,8 +1,37 @@
 import React from 'react';
 import ImageGallery from 'react-image-gallery';
-import Contact from './Contact'
+import Contact from './Contact';
+import axios from 'axios';
+import config from '../../config.js';
 
 export default class ProductDetail extends React.Component {
+    state = {
+        productDetail:{}
+    };
+
+    componentDidMount() {
+        let that=this;
+        let url = config.apiUrl.products+'/'+this.props.params.productId;
+        axios.get(url).then(function (response) {
+            if (response.status == 200) {
+                if (response.data.resultCode == 1) {
+                    console.log(response.data.data);
+                    that.setState({
+                        productDetail:response.data.data
+                    });
+                }
+                else {
+                    console.log(response);
+                }
+            }
+            else {
+                console.log(response);
+            }
+        }).catch(function (error) {
+            console.log(error);
+        });
+    }
+
     handleImageLoad(event) {
         console.log('Image loaded ', event.target)
     }
@@ -10,22 +39,21 @@ export default class ProductDetail extends React.Component {
     handlePause() {
         this._imageGallery.pause()
     }
-    render() {
 
-        const images = [
-            {
-                original: 'http://pic5.duowan.com/news/1006/139656342925/139657474733.jpg',
-                thumbnail: 'http://pic5.duowan.com/news/1006/139656342925/139657474733.jpg',
-            },
-            {
-                original: 'http://pic5.duowan.com/news/1006/139656342925/139657474733.jpg',
-                thumbnail: 'http://pic5.duowan.com/news/1006/139656342925/139657474733.jpg'
-            },
-            {
-                original: 'http://pic5.duowan.com/news/1006/139656342925/139657474733.jpg',
-                thumbnail: 'http://pic5.duowan.com/news/1006/139656342925/139657474733.jpg'
-            }
-        ];
+    render() {
+        let images=[];
+        if(this.state.productDetail.images){
+            this.state.productDetail.images.forEach(function(item,index,array){
+                images.push({
+                    original: item,
+                    thumbnail: item,
+                    originalClass: 'h-250',
+                    thumbnailClass: 'h-250',
+                });
+            });
+        }
+
+
 
         return (
             <div className="bg-default product-detail">
@@ -39,32 +67,22 @@ export default class ProductDetail extends React.Component {
                     showThumbnails={false}
                     showNav={false}/>
                 <div className="weui_panel p-l-10 p-r-10">
-                    <p className="title">标题</p>
-                    <p className="price">￥2300</p>
+                    <p className="title">{this.state.productDetail.title}</p>
+                    <p className="price">￥{this.state.productDetail.price}</p>
                     <div className="det-line">
                         <div className="span-group">
-                            <span className="text-gray">户型：</span>
-                            <span>2室一厅</span>
+                            <span className="text-gray">交易方式：</span>
+                            <span>{this.state.productDetail.tradeType}</span>
                         </div>
                         <div className="span-group">
-                            <span className="text-gray">面积：</span>
-                            <span>54平方米</span>
-                        </div>
-                    </div>
-                    <div className="det-line">
-                        <div className="span-group">
-                            <span className="text-gray">户型：</span>
-                            <span>2室一厅</span>
-                        </div>
-                        <div className="span-group">
-                            <span className="text-gray">面积：</span>
-                            <span>54平方米</span>
+                            <span className="text-gray">种类：</span>
+                            <span>{this.state.productDetail.category}</span>
                         </div>
                     </div>
                     <div className="det-line">
                         <div className="span-group">
                             <span className="text-gray">地址：</span>
-                            <span>广东省深圳市南山区</span>
+                            <span>{this.state.productDetail.address}</span>
                         </div>
                     </div>
                 </div>
@@ -73,7 +91,9 @@ export default class ProductDetail extends React.Component {
                     <div className="weui_panel_hd">详情</div>
                     <div className="weui_panel_bd">
                         <div className="weui_media_box weui_media_text">
-                            <p className="text-gray text-sm">由各种物质组成的巨型球状天体，叫做星球。星球有一定的形状，有自己的运行轨道。由各种物质组成的巨型球状天体，叫做星球。星球有一定的形状，有自己的运行轨道。由各种物质组成的巨型球状天体，叫做星球。星球有一定的形状，有自己的运行轨道。由各种物质组成的巨型球状天体，叫做星球。星球有一定的形状，有自己的运行轨道。由各种物质组成的巨型球状天体，叫做星球。星球有一定的形状，有自己的运行轨道。</p>
+                            <p className="text-gray text-sm">
+                                {this.state.productDetail.description}
+                            </p>
                         </div>
                     </div>
                 </div>

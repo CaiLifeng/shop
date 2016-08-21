@@ -27,7 +27,7 @@ const ProductSchema = new Schema({
     telephone: {type: String},
     category: {type: String},
     description: {type: String},
-    tradeType: {type: Number}//交易方式，0为当面交易，1为快递交易
+    tradeType: {type: String}//交易方式
 });
 
 

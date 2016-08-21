@@ -13,6 +13,7 @@ export default class Home extends React.Component {
         productList: [],
         city: '',
         isMore: true,
+        searchText:'',
         filterData: [{
             name: '区域',
             type: 'address',
@@ -136,8 +137,12 @@ export default class Home extends React.Component {
 
     handelSearch(text) {
         console.log(text);
-            //this.state.productList=[];
-            //this.getProducts({title: text});
+        if(this.state.searchText!==text){
+            this.state.productList=[];
+            this.state.searchText=text;
+            this.getProducts({title: this.state.searchText});
+        }
+
     }
 
     handelClear(text) {

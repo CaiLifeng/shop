@@ -175,7 +175,7 @@ router.get('/regions', expressJwt({secret: config.secretKey}), middlewares.authE
 
 //新增产品
 router.post('/products', expressJwt({secret: config.secretKey}), middlewares.authError, function (req, res, next) {
-    if (!req.body.title || !req.body.price || !req.body.address || !req.body.description || !req.body.latitude || !req.body.longitude) {
+    if (!req.body.title || !req.body.price || !req.body.address || !req.body.description || !req.body.latitude || !req.body.longitude || !req.body.category) {
         res.json({
             resultCode: 0,
             resultMsg: '缺少验证参数'
@@ -188,10 +188,12 @@ router.post('/products', expressJwt({secret: config.secretKey}), middlewares.aut
         title: req.body.title,
         price: req.body.price,
         address: req.body.address,
+        category: req.body.category,
         location: {
             latitude: req.body.latitude,
             longitude: req.body.longitude
         },
+        tradeType: req.body.tradeType,
         description: req.body.description,
         images: req.body.images
     });
@@ -217,7 +219,7 @@ router.get('/products', expressJwt({secret: config.secretKey}), middlewares.auth
     var query = {};
     var start;
     var limit;
-    if(req.query.title){
+    if (req.query.title) {
         query.title = new RegExp('.*' + req.query.title + '.*', "g");
     }
     if (req.query.pageSize > 0 && req.query.pageIndex >= 0) {
@@ -236,8 +238,6 @@ router.get('/products', expressJwt({secret: config.secretKey}), middlewares.auth
     if (parseInt(req.query.priceMin) >= 0 && parseInt(req.query.priceMax) >= 0) {
         query.price = {$gt: req.query.priceMin, $lt: req.query.priceMax}
     }
-    console.log(req.query);
-    console.log(query);
 
     Product.find(query).skip(start).limit(limit).exec(function (err, data) {
         if (!err) {
@@ -270,6 +270,24 @@ router.get('/products', expressJwt({secret: config.secretKey}), middlewares.auth
 });
 
 
+//根据产品id获取产品信息
+router.get('/products/:productId', expressJwt({secret: config.secretKey}), middlewares.authError, function (req, res, next) {
+    console.log(req.params.productId);
+    Product.findById(req.params.productId,function(err,product){
+        if(!err){
+            res.json({
+                resultCode:1,
+                data:product
+            });
+        }
+        else{
+            res.json({
+                resultCode: 0,
+                resultMsg: err
+            });
+        }
+    });
+});
 
 
 //获取七牛token

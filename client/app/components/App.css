@@ -243,6 +243,9 @@ li{
     display: inline-block;
     width: 50%;
 }
+.product-detail .h-250{
+    height:250px !important;
+}
 /*productDetail end*/
 
 /*contact start*/
