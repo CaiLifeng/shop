@@ -25,6 +25,7 @@ router.post('/login', function (req, res, next) {
                 resultMsg: err1
             });
         } else {
+            //如果用户存在
             if (user1) {
                 User.findOne({telephone: telephone, verifyCode: verifyCode}, function (err2, user2) {
                     if (err2) {
@@ -34,6 +35,7 @@ router.post('/login', function (req, res, next) {
                         });
                     }
                     else {
+                        //如果验证码正确，通过并返回token
                         if (user2) {
                             var token = jwt.sign({telephone: telephone, userId: user2.ObjectId}, config.secretKey);
                             res.json({
@@ -42,6 +44,7 @@ router.post('/login', function (req, res, next) {
                                 token: token
                             });
                         }
+                        //如果验证码错误，返回出错信息
                         else {
                             res.json({
                                 resultCode: 0,
@@ -51,6 +54,7 @@ router.post('/login', function (req, res, next) {
                     }
                 });
             }
+            //如果用户不存在，返回手机号码错误
             else {
                 res.json({
                     resultCode: 0,
@@ -87,6 +91,7 @@ router.post('/getVerifyCode', function (req, res, next) {
                     });
                 }
                 else {
+                    //如果用户存在的话
                     if (user) {
                         user.verifyCode = randomCode;
                         user.save(function (err) {
@@ -105,15 +110,15 @@ router.post('/getVerifyCode', function (req, res, next) {
                             }
                         });
                     }
+                    //如果用户不存在
                     else {
-                        //把验证码存入数据库
+                        //新建一个用户并把验证码存入数据库
                         var user1 = new User({
                             telephone: req.body.telephone,
                             verifyCode: randomCode,
                             sid: body.sid
                         });
 
-                        //保存到数据库
                         user1.save(function (err) {
                             if (err) {
                                 res.json({

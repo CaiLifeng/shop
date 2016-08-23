@@ -48,6 +48,6 @@ module.exports = {
   },
   plugins: [
     new webpack.HotModuleReplacementPlugin(),
-    new OpenBrowserPlugin({ url: 'http://192.168.1.103:3001' })
+    new OpenBrowserPlugin({ url: 'http://localhost:3001' })
   ]
 };

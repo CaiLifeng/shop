@@ -1,5 +1,5 @@
 import React from 'react';
-import {Router,Route,browserHistory,IndexRoute} from 'react-router';
+import {Router,Route,browserHistory,hashHistory,IndexRoute} from 'react-router';
 import ReactDOM from 'react-dom';
 import App from './components/App';
 import Products from './components/home/Products';
@@ -8,6 +8,7 @@ import Publish from './components/publish/Publish';
 import NavBar from './components/NavBar';
 import ProductDetail from './components/productDetail/ProductDetail';
 import Login from './components/Login';
+import Information from './components/Information';
 import axios from 'axios';
 
 require('weui');
@@ -22,7 +23,7 @@ axios.defaults.headers.common['Authorization'] = 'Bearer '+'eyJhbGciOiJIUzI1NiIs
 axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
 
 ReactDOM.render(
-    <Router>
+    <Router history={hashHistory}>
       <Route path="/" component={App}>
         <IndexRoute component={Home}/>
         <Route path="home" component={Home} />
@@ -31,6 +32,7 @@ ReactDOM.render(
       </Route>
         <Route path="/product/:productId" component={ProductDetail} />
         <Route path="/login" component={Login} />
+        <Route path="/information" component={Information} />
     </Router>,
     document.body.appendChild(document.createElement('div'))
 );

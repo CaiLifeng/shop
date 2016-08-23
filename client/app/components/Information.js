@@ -1,5 +1,8 @@
+/**
+ * Created by clf on 2016/8/23.
+ */
 import React from 'react';
-import config from '../../config.js'
+import config from '../config.js'
 import axios from 'axios';
 import Qiniu from 'qiniu.js';
 import {Form,FormCell,CellBody,Uploader,CellHeader,Select,Input,Label,CellFooter,vcodeSrc,Icon,TextArea,section,ButtonArea,Button} from 'react-weui';
@@ -9,32 +12,14 @@ import { browserHistory,hashHistory } from 'react-router';
 
 export default class Publish extends React.Component {
     state = {
-        title: null,
-        price: null,
-        category: '不限',
-        tradeType: '不限',
-        description: null,
-        location: null,
+        password: null,
+        rePassword: null,
+        sex: null,
         qnToken: null,
-        latitude: null,
-        longitude: null,
         demoFiles: [],
         showToast: false,
         toastText: null
     };
-
-    categoryList = config.categoryList.map(function (item, index, array) {
-        let obj = {};
-        obj.value = item;
-        obj.label = item;
-        return obj;
-    });
-    tradeTypeList = config.tradeType.map(function (item, index, array) {
-        let obj = {};
-        obj.value = item;
-        obj.label = item;
-        return obj;
-    });
 
     componentWillMount() {
         //获取定位
@@ -199,9 +184,9 @@ export default class Publish extends React.Component {
             }
 
         })
-        .catch(function (error) {
-            console.log(error);
-        });
+            .catch(function (error) {
+                console.log(error);
+            });
     }
 
     render() {
@@ -209,39 +194,43 @@ export default class Publish extends React.Component {
             <div className="publish p-b-50">
                 <Form>
                     <FormCell>
+                        <CellHeader>
+                            <Label>手机号码</Label>
+                        </CellHeader>
                         <CellBody>
-                            <Input type="text" placeholder="标题" value={this.state.title}
+                            <Input type="tel" disabled="disabled" value="13923043382"/>
+                        </CellBody>
+                    </FormCell>
+
+                    <FormCell>
+                        <CellHeader>
+                            <Label>姓名</Label>
+                        </CellHeader>
+                        <CellBody>
+                            <Input type="tel" placeholder="请输入姓名"/>
+                        </CellBody>
+                    </FormCell>
+
+                    <FormCell>
+                        <CellHeader>
+                            <Label>年龄</Label>
+                        </CellHeader>
+                        <CellBody>
+                            <Input type="tel" placeholder="请输入年龄"/>
+                        </CellBody>
+                    </FormCell>
+                    <FormCell>
+                        <CellBody>
+                            <Input type="text" placeholder="姓名" value={this.state.title}
                                    onChange={e=>this.setState({title: e.target.value})}/>
                         </CellBody>
                     </FormCell>
 
-                    <FormCell>
-                        <CellBody>
-                            <TextArea placeholder="描述" rows="3" maxlength="200" value={this.state.description}
-                                      onChange={e=>this.setState({description: e.target.value})}></TextArea>
-                        </CellBody>
-                    </FormCell>
-                    <FormCell>
-                        <CellBody>
-                            <Input type="number" placeholder="价格(单位/元)" value={this.state.price}
-                                   onChange={e=>this.setState({price: e.target.value})} pattern="[0-9]*" max="1000000"
-                                   min="1"/>
-                        </CellBody>
-                    </FormCell>
-
                     <FormCell select selectPos="after">
-                        <CellHeader>产品类型</CellHeader>
+                        <CellHeader>性别</CellHeader>
                         <CellBody>
-                            <Select data={this.categoryList} value={this.state.category}
+                            <Select data={['男','女']} value={this.state.category}
                                     onChange={e=>this.setState({category: e.target.value})}/>
-                        </CellBody>
-                    </FormCell>
-
-                    <FormCell select selectPos="after">
-                        <CellHeader>交易方式</CellHeader>
-                        <CellBody>
-                            <Select data={this.tradeTypeList} value={this.state.tradeType}
-                                    onChange={e=>this.setState({tradeType: e.target.value})}/>
                         </CellBody>
                     </FormCell>
 
@@ -255,8 +244,8 @@ export default class Publish extends React.Component {
                     <FormCell>
                         <CellBody>
                             <Uploader
-                                title="图片上传"
-                                maxCount={7}
+                                title="头像"
+                                maxCount={1}
                                 maxWidth={500}
                                 files={this.state.demoFiles}
                                 onError={msg => alert(msg)}
@@ -269,7 +258,7 @@ export default class Publish extends React.Component {
                 </Form>
                 <section>
                     <ButtonArea>
-                        <Button onClick={this.submit.bind(this)}>确认发布</Button>
+                        <Button onClick={this.submit.bind(this)}>提交</Button>
                     </ButtonArea>
                 </section>
                 <Toast show={this.state.showToast}>
