@@ -12,65 +12,14 @@ import { browserHistory,hashHistory } from 'react-router';
 
 export default class Publish extends React.Component {
     state = {
-        password: null,
-        rePassword: null,
+        name:null,
         sex: null,
+        age:null,
         qnToken: null,
         demoFiles: [],
         showToast: false,
         toastText: null
     };
-
-    componentWillMount() {
-        //获取定位
-        if ("geolocation" in navigator) {
-            function success(position) {
-                var latitude = position.coords.latitude;
-                var longitude = position.coords.longitude;
-                this.setState({latitude: position.coords.latitude, longitude: position.coords.longitude});
-                axios.post(config.apiUrl.getLocationInfo, {
-                    latitude: latitude,
-                    longitude: longitude
-                }).then(function (response) {
-                    if (response.status == 200) {
-                        let location = response.data.data.addressComponent.province + response.data.data.addressComponent.city + response.data.data.addressComponent.district;
-                        console.log(location);
-                        this.setState({
-                            location: location
-                        });
-                    }
-
-                }.bind(this))
-                    .catch(function (error) {
-                        console.log(error);
-                    });
-            };
-
-            function error() {
-                alert('定位失败');
-            };
-            navigator.geolocation.getCurrentPosition(success.bind(this), error);
-        } else {
-            alert('您的浏览器不支持定位');
-        }
-
-        //获取七牛token
-        function getQnToken() {
-            axios.get(config.apiUrl.getQnToken).then(function (response) {
-                if (response.status == 200) {
-                    this.setState({
-                        qnToken: response.data.data.uploadToken
-                    });
-                }
-
-            }.bind(this))
-                .catch(function (error) {
-                    console.log(error);
-                });
-        }
-
-        getQnToken.apply(this);
-    }
 
     //使用canvas将dataUrl转换为blob
     uploadFile(token, file) {

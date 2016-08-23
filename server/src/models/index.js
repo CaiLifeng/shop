@@ -9,6 +9,8 @@ const UserSchema = new Schema({
     passWord: {type: String},
     telephone: {type: String},
     accessToken: {type: String},
+    sex:{type:String},
+    age:{type:Number},
     image: {type: String},
     sid: {type: String},
     verifyCode: {type: String}

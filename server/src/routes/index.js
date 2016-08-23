@@ -426,4 +426,44 @@ router.get('/districts', function (req, res, next) {
 });
 
 
+
+//更新用户信息
+router.post('/updateUserInfo', function (req, res, next) {
+   if(!req.body.userId||!req.body.name){
+       res.json({
+           resultCode: 0,
+           resultMsg: '缺少验证参数'
+       });
+   }
+    User.findById(req.body.userId, function (err, user) {
+        if (err){
+            return res.json({
+                resultCode: 0,
+                resultMsg: '接口出错'
+            });
+        }
+
+        user.name = req.body.name;
+        user.image = req.body.image;
+        user.sex = req.body.sex;
+        user.age = req.body.age;
+        user.save(function (err) {
+            if (err){
+                res.json({
+                    resultCode: 0,
+                    resultMsg: JSON.stringify(err)
+                });
+            }
+            else{
+                res.json({
+                    resultCode: 1,
+                    user: user
+                });
+            }
+        });
+    });
+
+});
+
+
 module.exports = router;
