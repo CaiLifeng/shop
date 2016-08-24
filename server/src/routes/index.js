@@ -278,14 +278,14 @@ router.get('/products', expressJwt({secret: config.secretKey}), middlewares.auth
 //根据产品id获取产品信息
 router.get('/products/:productId', expressJwt({secret: config.secretKey}), middlewares.authError, function (req, res, next) {
     console.log(req.params.productId);
-    Product.findById(req.params.productId,function(err,product){
-        if(!err){
+    Product.findById(req.params.productId, function (err, product) {
+        if (!err) {
             res.json({
-                resultCode:1,
-                data:product
+                resultCode: 1,
+                data: product
             });
         }
-        else{
+        else {
             res.json({
                 resultCode: 0,
                 resultMsg: err
@@ -426,41 +426,46 @@ router.get('/districts', function (req, res, next) {
 });
 
 
-
 //更新用户信息
 router.post('/updateUserInfo', function (req, res, next) {
-   if(!req.body.userId||!req.body.name){
-       res.json({
-           resultCode: 0,
-           resultMsg: '缺少验证参数'
-       });
-   }
-    User.findById(req.body.userId, function (err, user) {
-        if (err){
-            return res.json({
+    if (!req.body.id || !req.body.name || !req.body.sex || !req.body.age) {
+        res.json({
+            resultCode: 0,
+            resultMsg: '缺少验证参数'
+        });
+    }
+    User.findById(req.body.id, function (err, user) {
+        if (err) {
+            res.json({
                 resultCode: 0,
                 resultMsg: '接口出错'
             });
         }
+        else {
+            if (user) {
+                user.name = req.body.name;
+                user.image = req.body.image;
+                user.sex = req.body.sex;
+                user.age = req.body.age;
+                user.save(function (err) {
+                    if (err) {
+                        res.json({
+                            resultCode: 0,
+                            resultMsg: JSON.stringify(err)
+                        });
+                    }
+                    else {
+                        res.json({
+                            resultCode: 1,
+                            user: user
+                        });
+                    }
+                });
+            }
+            else {
 
-        user.name = req.body.name;
-        user.image = req.body.image;
-        user.sex = req.body.sex;
-        user.age = req.body.age;
-        user.save(function (err) {
-            if (err){
-                res.json({
-                    resultCode: 0,
-                    resultMsg: JSON.stringify(err)
-                });
             }
-            else{
-                res.json({
-                    resultCode: 1,
-                    user: user
-                });
-            }
-        });
+        }
     });
 
 });

@@ -12,18 +12,19 @@ import { browserHistory,hashHistory } from 'react-router';
 
 export default class Publish extends React.Component {
     state = {
-        name:null,
+        user:JSON.parse(localStorage.getItem('user')),
+        name: null,
         sex: null,
-        age:null,
+        age: null,
         qnToken: null,
-        demoFiles: [],
+        demoFiles: JSON.parse(localStorage.getItem('user')).image?[{url:JSON.parse(localStorage.getItem('user')).image}]:[{}],
         showToast: false,
         toastText: null
     };
 
     //使用canvas将dataUrl转换为blob
     uploadFile(token, file) {
-        var that = this;
+        const that = this;
         let newFiles = [...that.state.demoFiles, {url: '', status: '0%'}];
         that.setState({
             demoFiles: newFiles
@@ -68,9 +69,11 @@ export default class Publish extends React.Component {
                         let newFiles = that.state.demoFiles.slice(0);
                         newFiles[newFiles.length - 1] = {url: file.data, status: null, sourceUrl: sourceUrl};
 
+                        that.state.user.image=newFiles[0];
                         that.setState({
                             demoFiles: newFiles
                         });
+
                     }
 
                 }).catch(function (error) {
@@ -81,20 +84,15 @@ export default class Publish extends React.Component {
     }
 
     submit() {
-        let that = this;
+        const that = this;
 
-        let description = this.state.description;
-        let title = this.state.title;
-        let price = this.state.price;
-        let location = this.state.location;
-        let category = this.state.category;
-        let tradeType = this.state.tradeType;
-        let images = [];
-        this.state.demoFiles.forEach(function (item, index, array) {
-            images.push(item.sourceUrl);
-        });
+        let id = this.state.user._id;
+        let name = this.state.user.name;
+        let age = this.state.user.age;
+        let sex = this.state.user.sex;
+        let image = this.state.user.image.sourceUrl;
 
-        if (!description || !title || !price || !location || !category || !tradeType) {
+        if (!id||!name || !age || !sex || !image) {
             that.setState({showToast: true, toastText: '缺少验证参数'});
             setTimeout(function () {
                 that.setState({showToast: false, toastText: ''});
@@ -102,31 +100,24 @@ export default class Publish extends React.Component {
             return;
         }
 
-        axios.post(config.apiUrl.products, {
-            title: title,
-            price: price,
-            category: category,
-            address: location,
-            description: description,
-            longitude: this.state.longitude,
-            latitude: this.state.latitude,
-            images: images,
-            tradeType: tradeType
-
+        axios.post(config.apiUrl.updateUserInfo, {
+            id:id,
+            name:name,
+            age:age,
+            sex:sex,
+            image:image
         }).then(function (response) {
             if (response.status == 200) {
                 if (response.data.resultCode == 1) {
-                    that.setState({showToast: true, toastText: '发布成功'});
+                    that.setState({showToast: true, toastText: '提交成功'});
+                    localStorage.setItem('user',JSON.stringify(response.data.user));
                     setTimeout(function () {
-                        that.setState({showToast: false, toastText: ''});
                         hashHistory.push('/');
                     }, 1000);
-
                 }
                 else {
                     that.setState({showToast: true, toastText: response.data.resultMsg});
                     setTimeout(function () {
-                        that.setState({showToast: false, toastText: ''});
                         hashHistory.push('/');
                     }, 1000);
                 }
@@ -138,6 +129,25 @@ export default class Publish extends React.Component {
             });
     }
 
+    componentWillMount(){
+        //获取七牛token
+        function getQnToken() {
+            axios.get(config.apiUrl.getQnToken).then(function (response) {
+                if (response.status == 200) {
+                    this.setState({
+                        qnToken: response.data.data.uploadToken
+                    });
+                }
+
+            }.bind(this))
+                .catch(function (error) {
+                    console.log(error);
+                });
+        }
+
+        getQnToken.apply(this);
+    }
+
     render() {
         return (
             <div className="publish p-b-50">
@@ -147,7 +157,7 @@ export default class Publish extends React.Component {
                             <Label>手机号码</Label>
                         </CellHeader>
                         <CellBody>
-                            <Input type="tel" disabled="disabled" value="13923043382"/>
+                            <Input type="tel" disabled="disabled" value={this.state.user.telephone} onChange={e=>this.state.user.telephone=e.target.value}/>
                         </CellBody>
                     </FormCell>
 
@@ -156,7 +166,7 @@ export default class Publish extends React.Component {
                             <Label>姓名</Label>
                         </CellHeader>
                         <CellBody>
-                            <Input type="tel" placeholder="请输入姓名"/>
+                            <Input type="text" placeholder="请输入姓名" value={this.state.user.name} onChange={e=>this.state.user.name=e.target.value}/>
                         </CellBody>
                     </FormCell>
 
@@ -165,31 +175,16 @@ export default class Publish extends React.Component {
                             <Label>年龄</Label>
                         </CellHeader>
                         <CellBody>
-                            <Input type="tel" placeholder="请输入年龄"/>
-                        </CellBody>
-                    </FormCell>
-                    <FormCell>
-                        <CellBody>
-                            <Input type="text" placeholder="姓名" value={this.state.title}
-                                   onChange={e=>this.setState({title: e.target.value})}/>
+                            <Input type="number" placeholder="请输入年龄" value={this.state.user.age} onChange={e=>this.state.user.age=e.target.value}/>
                         </CellBody>
                     </FormCell>
 
                     <FormCell select selectPos="after">
                         <CellHeader>性别</CellHeader>
                         <CellBody>
-                            <Select data={['男','女']} value={this.state.category}
-                                    onChange={e=>this.setState({category: e.target.value})}/>
+                            <Select data={[{value:'男',label:'男'},{value:'女',label:'女'}]} value={this.state.user.sex} onChange={e=>this.state.user.sex=e.target.value}/>
                         </CellBody>
                     </FormCell>
-
-                    <div className="weui_cell">
-                        <div className="weui_cell_bd weui_cell_primary">
-                            <i className="fa fa-location-arrow" aria-hidden="true"></i>
-                            <span className="m-l-10">{this.state.location}</span>
-                        </div>
-                    </div>
-
                     <FormCell>
                         <CellBody>
                             <Uploader
