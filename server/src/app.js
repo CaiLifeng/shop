@@ -27,20 +27,6 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(middlewares.setHeader);
 
-//function ensureAuthorized(req, res, next) {
-//  var bearerToken;
-//  var bearerHeader = req.headers["authorization"];
-//  if (typeof bearerHeader !== 'undefined') {
-//    var bearer = bearerHeader.split(" ");
-//    bearerToken = bearer[1];
-//    req.token = bearerToken;
-//    next(); sdf
-//  } else {
-//    res.sendStatus(401);
-//  }
-//}
-
-
 //其他接口
 app.use('/api/', routes);
 
@@ -50,9 +36,9 @@ app.use('/api/', routes);
 if (app.get('env') === 'development') {
     app.use(function (err, req, res, next) {
         res.status(err.status || 500);
-        res.render('error', {
-            message: err.message,
-            error: err
+        res.json({
+            resultCode: 0,
+            resultMsg: err
         });
     });
 }
@@ -61,9 +47,9 @@ if (app.get('env') === 'development') {
 // no stacktraces leaked to user
 app.use(function (err, req, res, next) {
     res.status(err.status || 500);
-    res.render('error', {
-        message: err.message,
-        error: {}
+    res.json({
+        resultCode: 0,
+        resultMsg: err
     });
 });
 

@@ -6,6 +6,7 @@ function authError(err, req, res, next) {
     next();
 }
 
+
 //setHeader
 function setHeader(req, res, next) {
     res.header('Access-Control-Allow-Origin', '*');
