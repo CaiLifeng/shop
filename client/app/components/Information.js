@@ -3,6 +3,7 @@
  */
 import React from 'react';
 import config from '../config.js'
+import axiosIns from '../utils.js';
 import axios from 'axios';
 import Qiniu from 'qiniu.js';
 import {Form,FormCell,CellBody,Uploader,CellHeader,Select,Input,Label,CellFooter,vcodeSrc,Icon,TextArea,section,ButtonArea,Button} from 'react-weui';
@@ -100,52 +101,45 @@ export default class Publish extends React.Component {
             return;
         }
 
-        axios.post(config.apiUrl.updateUserInfo, {
+        axiosIns.post(config.apiUrl.updateUserInfo, {
             id:id,
             name:name,
             age:age,
             sex:sex,
             image:image
-        }).then(function (response) {
-            if (response.status == 200) {
-                if (response.data.resultCode == 1) {
-                    that.setState({showToast: true, toastText: '提交成功'});
-                    localStorage.setItem('user',JSON.stringify(response.data.user));
-                    setTimeout(function () {
-                        hashHistory.push('/');
-                    }, 1000);
-                }
-                else {
-                    that.setState({showToast: true, toastText: response.data.resultMsg});
-                    setTimeout(function () {
-                        hashHistory.push('/');
-                    }, 1000);
-                }
+        }).then(function (data) {
+            if (data.resultCode == 1) {
+                that.setState({showToast: true, toastText: '提交成功'});
+                localStorage.setItem('user',JSON.stringify(data.user));
+                setTimeout(function () {
+                    hashHistory.push('/');
+                }, 1000);
             }
-
+            else {
+                that.setState({showToast: true, toastText: data.resultMsg});
+                setTimeout(function () {
+                    hashHistory.push('/');
+                }, 1000);
+            }
         })
-            .catch(function (error) {
-                console.log(error);
-            });
+
     }
 
     componentWillMount(){
+        let that=this;
         //获取七牛token
-        function getQnToken() {
-            axios.get(config.apiUrl.getQnToken).then(function (response) {
-                if (response.status == 200) {
-                    this.setState({
-                        qnToken: response.data.data.uploadToken
+        (function getQnToken() {
+            axiosIns.get(config.apiUrl.getQnToken).then(function (data) {
+                if(data.resultCode==1){
+                    that.setState({
+                        qnToken: data.data.uploadToken
                     });
                 }
-
-            }.bind(this))
-                .catch(function (error) {
-                    console.log(error);
-                });
-        }
-
-        getQnToken.apply(this);
+                else{
+                    console.log(data.resultMsg);
+                }
+            })
+        })();
     }
 
     render() {

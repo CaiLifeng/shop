@@ -2,7 +2,7 @@ import React from 'react';
 import {Link,History} from 'react-router';
 import classNames from 'classnames';
 import {Toast} from 'react-weui';
-import axios from 'axios';
+import axiosIns from '../utils';
 import config from '../config.js';
 import { hashHistory } from 'react-router';
 
@@ -41,40 +41,36 @@ export default class Login extends React.Component {
             });
         }
         else {
-            axios.post(config.login, {
+            axiosIns.post(config.login, {
                 telephone: this.refs.telephone.value,
                 verifyCode: this.refs.verifyCode.value
             })
-            .then(function (response) {
-                console.log(response);
-                if (response.data.resultCode == 1) {
-                    localStorage.setItem('token', response.data.token);
-                    localStorage.setItem('user', JSON.stringify(response.data.user));
-                    if(response.data.user.name){
-                        hashHistory.push('/products');
+                .then(function (data) {
+                    if (data.resultCode == 1) {
+                        localStorage.setItem('token', response.data.token);
+                        localStorage.setItem('user', JSON.stringify(response.data.user));
+                        if (response.data.user.name) {
+                            hashHistory.push('/products');
+                        }
+                        else {
+                            hashHistory.push('/information');
+                        }
                     }
-                    else{
-                        hashHistory.push('/information');
-                    }
-                }
-                else {
-                    that.setState({
-                        showConfirm: true,
-                        confirmText: response.data.resultMsg
-                    });
-
-                    setTimeout(function () {
+                    else {
                         that.setState({
-                            showConfirm: false,
-                            confirmText: ''
+                            showConfirm: true,
+                            confirmText: response.data.resultMsg
                         });
-                    }.bind(this), 2000);
-                }
 
-            })
-            .catch(function (error) {
-                console.log(error);
-            });
+                        setTimeout(function () {
+                            that.setState({
+                                showConfirm: false,
+                                confirmText: ''
+                            });
+                        }.bind(this), 2000);
+                    }
+
+                });
         }
         setTimeout(function () {
             this.setState({
@@ -86,27 +82,30 @@ export default class Login extends React.Component {
     }
 
     getverifyCode() {
-        var that=this;
-        axios.post(config.apiUrl.getVerifyCode, {
+        var that = this;
+        axiosIns.post(config.apiUrl.getVerifyCode, {
             telephone: this.refs.telephone.value
         })
-        .then(function (response) {
-            that.setState({verifyCodeText: '5', isDisabled: true});
-            let text = 5;
-            let interval = setInterval(function () {
-                if (text == 0) {
-                    clearInterval(interval);
-                    that.setState({verifyCodeText: '获取验证码', isDisabled: false});
+        .then(function (data) {
+                if(data.resultCode==1){
+                    that.setState({verifyCodeText: '5', isDisabled: true});
+                    let text = 5;
+                    let interval = setInterval(function () {
+                        if (text == 0) {
+                            clearInterval(interval);
+                            that.setState({verifyCodeText: '获取验证码', isDisabled: false});
+                        }
+                        else {
+                            text--;
+                            that.setState({verifyCodeText: text});
+                        }
+                    }, 1000);
                 }
-                else {
-                    text--;
-                    that.setState({verifyCodeText: text});
+                else{
+                    console.log(data.resultMsg);
                 }
-            }, 1000);
+
         })
-        .catch(function (error) {
-            console.log(error);
-        });
     }
 
     render() {

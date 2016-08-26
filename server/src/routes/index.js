@@ -23,12 +23,12 @@ router.get('/products/:productId', expressJwt({secret: config.secretKey}), middl
 //获取七牛token
 router.get('/getQnToken', expressJwt({secret: config.secretKey}), middlewares.authError, api.common.getQnToken);
 //获取位置
-router.post('/getLocationInfo', api.common.getLocationInfo);
+router.post('/getLocationInfo',expressJwt({secret: config.secretKey}), middlewares.authError, api.common.getLocationInfo);
 //获取所在城市的区列表
-router.get('/districts', api.common.getDistricts);
+router.get('/districts',expressJwt({secret: config.secretKey}), middlewares.authError, api.common.getDistricts);
 //更新用户信息
-router.post('/updateUserInfo', api.user.update);
+router.post('/updateUserInfo',expressJwt({secret: config.secretKey}), middlewares.authError, api.user.update);
 //根据用户id获取用户信息
-router.get('/user/:userId',api.user.getUserById);
+router.get('/user/:userId',expressJwt({secret: config.secretKey}), middlewares.authError,api.user.getUserById);
 
 module.exports = router;

@@ -1,5 +1,6 @@
 import React from 'react';
 import config from '../../config.js'
+import axiosIns from '../../utils.js';
 import axios from 'axios';
 import Qiniu from 'qiniu.js';
 import {Form,FormCell,CellBody,Uploader,CellHeader,Select,Input,Label,CellFooter,vcodeSrc,Icon,TextArea,section,ButtonArea,Button} from 'react-weui';
@@ -37,25 +38,22 @@ export default class Publish extends React.Component {
     });
 
     componentWillMount() {
+        let that = this;
         //获取定位
         if ("geolocation" in navigator) {
             function success(position) {
                 var latitude = position.coords.latitude;
                 var longitude = position.coords.longitude;
                 this.setState({latitude: position.coords.latitude, longitude: position.coords.longitude});
-                axios.post(config.apiUrl.getLocationInfo, {
+                axiosIns.post(config.apiUrl.getLocationInfo, {
                     latitude: latitude,
                     longitude: longitude
-                }).then(function (response) {
-                    if (response.status == 200) {
-                        let location = response.data.data.addressComponent.province + response.data.data.addressComponent.city + response.data.data.addressComponent.district;
-                        console.log(location);
-                        this.setState({
-                            location: location
-                        });
-                    }
-
-                }.bind(this))
+                }).then(function (data) {
+                    let location = data.data.addressComponent.province + data.data.addressComponent.city + data.data.addressComponent.district;
+                    that.setState({
+                        location: location
+                    });
+                })
                     .catch(function (error) {
                         console.log(error);
                     });
@@ -70,21 +68,23 @@ export default class Publish extends React.Component {
         }
 
         //获取七牛token
-        function getQnToken() {
-            axios.get(config.apiUrl.getQnToken).then(function (response) {
-                if (response.status == 200) {
-                    this.setState({
-                        qnToken: response.data.data.uploadToken
+        (function getQnToken() {
+            axiosIns.get(config.apiUrl.getQnToken).then(function (data) {
+                if(data.resultCode==1){
+                    that.setState({
+                        qnToken: data.data.uploadToken
                     });
+                    console.log(data.data.uploadToken);
                 }
+                else{
+                    console.log(data);
+                }
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
+        })();
 
-            }.bind(this))
-                .catch(function (error) {
-                    console.log(error);
-                });
-        }
-
-        getQnToken.apply(this);
     }
 
     //使用canvas将dataUrl转换为blob
@@ -168,7 +168,7 @@ export default class Publish extends React.Component {
             return;
         }
 
-        axios.post(config.apiUrl.products, {
+        axiosIns.post(config.apiUrl.products, {
             title: title,
             price: price,
             category: category,
@@ -178,29 +178,22 @@ export default class Publish extends React.Component {
             latitude: this.state.latitude,
             images: images,
             tradeType: tradeType
+        }).then(function (data) {
+            if (data.resultCode == 1) {
+                that.setState({showToast: true, toastText: '发布成功'});
+                setTimeout(function () {
+                    that.setState({showToast: false, toastText: ''});
+                    hashHistory.push('/');
+                }, 1000);
 
-        }).then(function (response) {
-            if (response.status == 200) {
-                if (response.data.resultCode == 1) {
-                    that.setState({showToast: true, toastText: '发布成功'});
-                    setTimeout(function () {
-                        that.setState({showToast: false, toastText: ''});
-                        hashHistory.push('/');
-                    }, 1000);
-
-                }
-                else {
-                    that.setState({showToast: true, toastText: response.data.resultMsg});
-                    setTimeout(function () {
-                        that.setState({showToast: false, toastText: ''});
-                        hashHistory.push('/');
-                    }, 1000);
-                }
             }
-
-        })
-        .catch(function (error) {
-            console.log(error);
+            else {
+                that.setState({showToast: true, toastText: data.resultMsg});
+                setTimeout(function () {
+                    that.setState({showToast: false, toastText: ''});
+                    hashHistory.push('/');
+                }, 1000);
+            }
         });
     }
 

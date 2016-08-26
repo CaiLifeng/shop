@@ -2,7 +2,7 @@ import React from 'react';
 import Products from './Products';
 import FilterBar from './FilterBar';
 import WeUI from 'react-weui';
-import axios from 'axios';
+import axiosIns from '../../utils.js';
 import config from '../../config.js';
 require('./../App.css');
 
@@ -13,7 +13,7 @@ export default class Home extends React.Component {
         productList: [],
         city: '',
         isMore: true,
-        searchText:'',
+        searchText: '',
         filterData: [{
             name: '区域',
             type: 'address',
@@ -44,22 +44,17 @@ export default class Home extends React.Component {
     getProducts({pageIndex=0, address='', category='', priceMin='', priceMax='',tradeType='',title='',pageSize=10}) {
         const that = this;
         let url = config.apiUrl.products + '?pageSize=' + pageSize + '&pageIndex=' + pageIndex + '&address=' + address + '&category=' + category + '&priceMin=' + priceMin + '&priceMax=' + priceMax + '&tradeType=' + tradeType + '&title=' + title;
-        axios.get(url).then(function (response) {
-            if (response.status == 200) {
-                if (response.data.resultCode == 1) {
-                    if (response.data.pageCount === pageIndex + 1) {
-                        that.setState({isMore: false});
-                    }
-                    that.setState({
-                        productList: that.state.productList.concat(response.data.data)
-                    });
+        axiosIns.get(url).then(function (data) {
+            if (data.resultCode == 1) {
+                if (data.pageCount === pageIndex + 1) {
+                    that.setState({isMore: false});
                 }
-                else {
-                    console.log(response);
-                }
+                that.setState({
+                    productList: that.state.productList.concat(data.data)
+                });
             }
             else {
-                console.log(response);
+                console.log(data.resultMsg);
             }
         }).catch(function (error) {
             console.log(error);
@@ -76,22 +71,16 @@ export default class Home extends React.Component {
 
                 getFilterData();
                 function getFilterData() {
-                    axios.get(config.apiUrl.districts + '?latitude=' + latitude + '&longitude=' + longitude).then(function (response) {
-                        if (response.status == 200) {
-                            if (response.data.resultCode == 1) {
-                                console.log(response);
-                                let districts = response.data.data;
-                                let filterDate = that.state.filterData.slice(0);
-                                filterDate[0].data = filterDate[0].data.concat(districts);
-
-                                console.log(districts);
-                                that.setState({filterData: filterDate});
-                            }
-                            else {
-                                console.log(response);
-                            }
+                    axiosIns.get(config.apiUrl.districts + '?latitude=' + latitude + '&longitude=' + longitude).then(function (data) {
+                        if (data.resultCode == 1) {
+                            let districts = data.data;
+                            let filterDate = that.state.filterData.slice(0);
+                            filterDate[0].data = filterDate[0].data.concat(districts);
+                            that.setState({filterData: filterDate});
                         }
-
+                        else {
+                            console.log(data.resultMsg);
+                        }
                     }).catch(function (error) {
                         console.log(error);
                     });
@@ -109,7 +98,7 @@ export default class Home extends React.Component {
     }
 
     componentWillMount() {
-        this.getProducts({pageIndex:0});
+        this.getProducts({pageIndex: 0});
         this.getLocation();
     }
 
@@ -137,17 +126,17 @@ export default class Home extends React.Component {
 
     handelSearch(text) {
         console.log(text);
-        if(this.state.searchText!==text){
-            this.state.productList=[];
-            this.state.searchText=text;
+        if (this.state.searchText !== text) {
+            this.state.productList = [];
+            this.state.searchText = text;
             this.getProducts({title: this.state.searchText});
         }
 
     }
 
     handelClear(text) {
-        this.state.filterData.forEach(function(item,index,array){
-            item.selected='';
+        this.state.filterData.forEach(function (item, index, array) {
+            item.selected = '';
         });
     }
 

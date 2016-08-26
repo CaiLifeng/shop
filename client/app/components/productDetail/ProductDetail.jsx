@@ -1,7 +1,7 @@
 import React from 'react';
 import ImageGallery from 'react-image-gallery';
 import Contact from './Contact';
-import axios from 'axios';
+import axiosIns from '../../utils.js';
 import config from '../../config.js';
 
 export default class ProductDetail extends React.Component {
@@ -12,20 +12,14 @@ export default class ProductDetail extends React.Component {
     componentDidMount() {
         let that=this;
         let url = config.apiUrl.products+'/'+this.props.params.productId;
-        axios.get(url).then(function (response) {
-            if (response.status == 200) {
-                if (response.data.resultCode == 1) {
-                    console.log(response.data.data);
-                    that.setState({
-                        productDetail:response.data.data
-                    });
-                }
-                else {
-                    console.log(response);
-                }
+        axiosIns.get(url).then(function (data) {
+            if (data.resultCode == 1) {
+                that.setState({
+                    productDetail:data.data
+                });
             }
             else {
-                console.log(response);
+                console.log(data.resultMsg);
             }
         }).catch(function (error) {
             console.log(error);
