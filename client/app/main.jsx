@@ -23,12 +23,11 @@ ReactDOM.render(
             <Route path="home" component={Home}/>
             <Route path="products" component={Home}/>
             <Route path="publish" component={Publish}/>
-            <Route path="information" component={Information}/>
+            <Route path="personal" component={Personal}/>
         </Route>
         <Route path="/product/:productId" component={ProductDetail}/>
         <Route path="/login" component={Login}/>
         <Route path="/regInfo" component={Information}/>
-        <Route path="/personal" component={Personal}/>
     </Router>,
     document.body.appendChild(document.createElement('div'))
 );

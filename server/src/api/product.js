@@ -9,7 +9,7 @@ var config = require('../config');
 var product = {
     //新增产品
     add: function (req, res, next) {
-        if (!req.body.title || !req.body.price || !req.body.address || !req.body.description || !req.body.latitude || !req.body.longitude || !req.body.category) {
+        if (!req.body.userId||!req.body.title || !req.body.price || !req.body.address || !req.body.description || !req.body.latitude || !req.body.longitude || !req.body.category) {
             return res.json({
                 resultCode: 0,
                 resultMsg: '缺少验证参数'
@@ -17,6 +17,7 @@ var product = {
         }
         //new一个实例
         var product = new Product({
+            userId:req.body.userId,
             title: req.body.title,
             price: req.body.price,
             address: req.body.address,
@@ -95,12 +96,73 @@ var product = {
             if(err){
                 return next(err);
             }
+            if(product){
+                console.log(product.userId);
+                User.findById(product.userId,function(err,user){
+                    if(err){
+                        return next(err);
+                    }
+                    product=product.toObject();
+                    product.user=user;
+                    console.log(product);
+                    res.json({
+                        resultCode: 1,
+                        data: product
+                    });
+
+                });
+            }
+            else{
+                res.json({
+                    resultCode: 1,
+                    data: product
+                });
+            }
+        });
+    },
+
+    getUserPublishByUserId:function(req,res,next){
+        Product.find({userId:req.params.userId}, function (err, product) {
+            if(err){
+                return next(err);
+            }
             res.json({
                 resultCode: 1,
                 data: product
             });
         });
-    }
+    },
+
+    getUserCollectByUserId:function(req,res,next){
+        User.findById(req.params.userId,function(err,user){
+            if(err){
+                return next(err);
+            }
+            if(user){
+                var collect=user.collect;
+                Product.find({_id: { $in : collect } },function(err,product){
+                    if(err){
+                        return next(err);
+                    }
+                    res.json({
+                        resultCode: 1,
+                        data: product
+                    });
+
+                });
+            }
+
+        });
+        Product.find({userId:req.params.userId}, function (err, product) {
+            if(err){
+                return next(err);
+            }
+            res.json({
+                resultCode: 1,
+                data: product
+            });
+        });
+    },
 };
 
 module.exports=product;

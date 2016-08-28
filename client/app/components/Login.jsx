@@ -31,35 +31,33 @@ export default class Login extends React.Component {
     }
 
     submit() {
-        hashHistory.push('/information');
-        return;
         var that = this;
-        if (!this.refs.verifyCode.value) {
-            this.setState({
+        if (!that.refs.verifyCode.value) {
+            that.setState({
                 showConfirm: true,
                 confirmText: '请填写验证码'
             });
         }
         else {
-            axiosIns.post(config.login, {
+            axiosIns.post(config.apiUrl.login, {
                 telephone: this.refs.telephone.value,
                 verifyCode: this.refs.verifyCode.value
             })
                 .then(function (data) {
                     if (data.resultCode == 1) {
-                        localStorage.setItem('token', response.data.token);
-                        localStorage.setItem('user', JSON.stringify(response.data.user));
-                        if (response.data.user.name) {
+                        localStorage.setItem('token',data.token);
+                        localStorage.setItem('user', JSON.stringify(data.user));
+                        if (data.user.name) {
                             hashHistory.push('/products');
                         }
                         else {
-                            hashHistory.push('/information');
+                            hashHistory.push('/regInfo');
                         }
                     }
                     else {
                         that.setState({
                             showConfirm: true,
-                            confirmText: response.data.resultMsg
+                            confirmText: data.resultMsg
                         });
 
                         setTimeout(function () {
@@ -67,17 +65,17 @@ export default class Login extends React.Component {
                                 showConfirm: false,
                                 confirmText: ''
                             });
-                        }.bind(this), 2000);
+                        }, 2000);
                     }
 
                 });
         }
         setTimeout(function () {
-            this.setState({
+            that.setState({
                 showConfirm: false,
                 confirmText: ''
             });
-        }.bind(this), 2000);
+        }, 2000);
 
     }
 

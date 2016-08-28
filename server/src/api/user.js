@@ -7,7 +7,7 @@ var request = require('request');
 var jwt = require('jsonwebtoken');
 
 var user = {
-    //µÇÂ½½Ó¿Ú
+    //ç™»é™†æ¥å£
     login: function (req, res, next) {
         var telephone = req.body.telephone;
         var verifyCode = req.body.verifyCode;
@@ -16,13 +16,13 @@ var user = {
             if (err) {
                 return next(err);
             }
-            //Èç¹ûÓÃ»§´æÔÚ
+            //å¦‚æœç”¨æˆ·å­˜åœ¨
             if (user) {
                 User.findOne({telephone: telephone, verifyCode: verifyCode}, function (err, user) {
                     if (err) {
                         return next(err);
                     }
-                    //Èç¹ûÑéÖ¤ÂëÕıÈ·£¬Í¨¹ı²¢·µ»Øtoken
+                    //å¦‚æœéªŒè¯ç æ­£ç¡®ï¼Œé€šè¿‡å¹¶è¿”å›token
                     if (user) {
                         var token = jwt.sign({telephone: telephone, userId: user.ObjectId}, config.secretKey);
                         res.json({
@@ -31,20 +31,20 @@ var user = {
                             token: token
                         });
                     }
-                    //Èç¹ûÑéÖ¤Âë´íÎó£¬·µ»Ø³ö´íĞÅÏ¢
+                    //å¦‚æœéªŒè¯ç é”™è¯¯ï¼Œè¿”å›å‡ºé”™ä¿¡æ¯
                     else {
                         res.json({
                             resultCode: 0,
-                            resultMsg: 'ÑéÖ¤Âë´íÎó'
+                            resultMsg: 'éªŒè¯ç é”™è¯¯'
                         });
                     }
                 });
             }
-            //Èç¹ûÓÃ»§²»´æÔÚ£¬·µ»ØÊÖ»úºÅÂë´íÎó
+            //å¦‚æœç”¨æˆ·ä¸å­˜åœ¨ï¼Œè¿”å›æ‰‹æœºå·ç é”™è¯¯
             else {
                 res.json({
                     resultCode: 0,
-                    resultMsg: 'ÊÖ»úºÅÂë´íÎó'
+                    resultMsg: 'æ‰‹æœºå·ç é”™è¯¯'
                 });
             }
         });
@@ -54,25 +54,29 @@ var user = {
         if (!req.body.telephone) {
             return res.json({
                 resultCode: 0,
-                resultMsg: 'È±ÉÙÑéÖ¤²ÎÊı'
+                resultMsg: 'ç¼ºå°‘éªŒè¯å‚æ•°'
             });
         }
         var randomCode = parseInt(100000 * Math.random());
         request.post({
+            headers: {
+                'charset': 'utf-8'
+            },
             url: 'https://sms.yunpian.com/v2/sms/single_send.json',
-            form: {apikey: config.yunPianKey, mobile: req.body.telephone, text: '¡¾Î¢ĞÅÉÌ³Ç¡¿ÄúµÄÑéÖ¤ÂëÊÇ' + randomCode}
+            form: {apikey: config.yunPianKey, mobile: req.body.telephone, text: 'ã€å¾®ä¿¡å•†åŸã€‘æ‚¨çš„éªŒè¯ç æ˜¯' + randomCode}
         }, function (err, response, body) {
             if (err) {
+                console.log(err);
                 return next(err);
             }
             body = JSON.parse(body);
             if (body.code == 0) {
-                //²é¿´ÊÇ·ñ´æÔÚ´ËÓÃ»§
+                //æŸ¥çœ‹æ˜¯å¦å­˜åœ¨æ­¤ç”¨æˆ·
                 User.findOne({telephone: req.body.telephone}, function (err, user) {
                     if (err) {
                         return next(err);
                     }
-                    //Èç¹ûÓÃ»§´æÔÚµÄ»°
+                    //å¦‚æœç”¨æˆ·å­˜åœ¨çš„è¯
                     if (user) {
                         user.verifyCode = randomCode;
                         user.save(function (err) {
@@ -87,9 +91,9 @@ var user = {
 
                         });
                     }
-                    //Èç¹ûÓÃ»§²»´æÔÚ
+                    //å¦‚æœç”¨æˆ·ä¸å­˜åœ¨
                     else {
-                        //ĞÂ½¨Ò»¸öÓÃ»§²¢°ÑÑéÖ¤Âë´æÈëÊı¾İ¿â
+                        //æ–°å»ºä¸€ä¸ªç”¨æˆ·å¹¶æŠŠéªŒè¯ç å­˜å…¥æ•°æ®åº“
                         var user1 = new User({
                             telephone: req.body.telephone,
                             verifyCode: randomCode,
@@ -111,7 +115,7 @@ var user = {
                 });
             }
             else {
-                next(err.msg);
+                next(body.detail);
             }
         })
     },
@@ -120,7 +124,7 @@ var user = {
         if (!req.body.id || !req.body.name || !req.body.sex || !req.body.age) {
             return res.json({
                 resultCode: 0,
-                resultMsg: 'È±ÉÙÑéÖ¤²ÎÊı'
+                resultMsg: 'ç¼ºå°‘éªŒè¯å‚æ•°'
             });
         }
         User.findById(req.body.id, function (err, user) {
@@ -147,7 +151,7 @@ var user = {
             else {
                 res.json({
                     resultCode: 0,
-                    resultMsg: 'Ã»ÓĞ´ËÓÃ»§'
+                    resultMsg: 'æ²¡æœ‰æ­¤ç”¨æˆ·'
                 });
             }
 

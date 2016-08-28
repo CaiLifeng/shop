@@ -6,7 +6,8 @@ import config from '../../config.js';
 
 export default class ProductDetail extends React.Component {
     state = {
-        productDetail:{}
+        productDetail:{},
+        user:{}
     };
 
     componentDidMount() {
@@ -15,7 +16,8 @@ export default class ProductDetail extends React.Component {
         axiosIns.get(url).then(function (data) {
             if (data.resultCode == 1) {
                 that.setState({
-                    productDetail:data.data
+                    productDetail:data.data,
+                    user:data.data.user||{}
                 });
             }
             else {
@@ -92,7 +94,7 @@ export default class ProductDetail extends React.Component {
                     </div>
                 </div>
 
-                <Contact>
+                <Contact image={this.state.user.image} telephone={this.state.user.telephone} name={this.state.user.name}>
                 </Contact>
             </div>
         );

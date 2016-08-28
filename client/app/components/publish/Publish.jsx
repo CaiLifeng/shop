@@ -84,7 +84,6 @@ export default class Publish extends React.Component {
                 console.log(error);
             });
         })();
-
     }
 
     //使用canvas将dataUrl转换为blob
@@ -148,7 +147,7 @@ export default class Publish extends React.Component {
 
     submit() {
         let that = this;
-
+        let userId=JSON.parse(localStorage.getItem('user'))._id;
         let description = this.state.description;
         let title = this.state.title;
         let price = this.state.price;
@@ -160,7 +159,7 @@ export default class Publish extends React.Component {
             images.push(item.sourceUrl);
         });
 
-        if (!description || !title || !price || !location || !category || !tradeType) {
+        if (!userId||!description || !title || !price || !location || !category || !tradeType) {
             that.setState({showToast: true, toastText: '缺少验证参数'});
             setTimeout(function () {
                 that.setState({showToast: false, toastText: ''});
@@ -169,6 +168,7 @@ export default class Publish extends React.Component {
         }
 
         axiosIns.post(config.apiUrl.products, {
+            userId:userId,
             title: title,
             price: price,
             category: category,

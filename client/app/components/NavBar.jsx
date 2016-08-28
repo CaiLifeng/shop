@@ -31,7 +31,7 @@ export default class NavBar extends React.Component {
                         </Link>
                     </li>
                     <li className="tab">
-                        <Link to="/information" className="link">
+                        <Link to="/personal" className="link">
                             <div className="icon-top">
                                 <i className="fa fa-user" aria-hidden="true"></i>
                             </div>

@@ -33,7 +33,7 @@ var config={
     file_limit: '1MB',
 
     //云片apikey
-    yunPianKey:'51626119fc375ea355a53864626975ac ',
+    yunPianKey:'51626119fc375ea355a53864626975ac',
 
     //价格区间,区间以~相隔
     priceList:['不限','0~1000','1000~2000','2000~3000','3000~4000'],

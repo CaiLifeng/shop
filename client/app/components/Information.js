@@ -18,7 +18,7 @@ export default class Publish extends React.Component {
         sex: null,
         age: null,
         qnToken: null,
-        demoFiles: JSON.parse(localStorage.getItem('user')).image?[{url:JSON.parse(localStorage.getItem('user')).image}]:[{}],
+        demoFiles: JSON.parse(localStorage.getItem('user')).image?[{url:JSON.parse(localStorage.getItem('user')).image}]:[],
         showToast: false,
         toastText: null
     };

@@ -12,11 +12,17 @@
 .b-r-none{
     border-radius: 0;
 }
+.bg-gray{
+    background-color: #f8f8f8;
+}
 .text-sm{
     font-size: 12px;
 }
 .text-md{
     font-size: 14px;
+}
+.text-white{
+    color: #FFFFFF;
 }
 .bg-default{
     background-color: #fbf9fe;

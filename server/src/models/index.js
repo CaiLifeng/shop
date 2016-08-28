@@ -13,7 +13,8 @@ const UserSchema = new Schema({
     age:{type:Number},
     image: {type: String},
     sid: {type: String},
-    verifyCode: {type: String}
+    verifyCode: {type: String},
+    collect:{type:Array}
 });
 
 
@@ -29,7 +30,8 @@ const ProductSchema = new Schema({
     telephone: {type: String},
     category: {type: String},
     description: {type: String},
-    tradeType: {type: String}//交易方式
+    tradeType: {type: String},//交易方式
+    userId:{type:ObjectId}//发布者id
 });
 
 
@@ -47,6 +49,7 @@ mongoose.connect(config.db, {
     server: {poolSize: 20}
 }, function (err) {
     if (err) {
+        console.log(err.message);
         process.exit(1);
     }
 });
