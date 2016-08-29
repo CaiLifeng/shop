@@ -1,6 +1,7 @@
 import React from 'react';
 import {section,ButtonArea,Button} from 'react-weui';
 import { browserHistory,hashHistory } from 'react-router';
+import {Link,History} from 'react-router';
 
 export default class Panel extends React.Component {
     loginOut(){
@@ -17,14 +18,18 @@ export default class Panel extends React.Component {
                             <a className="weui_cell" href="javascript:;">
                                 <div className="weui_cell_hd"></div>
                                 <div className="weui_cell_bd weui_cell_primary">
-                                    <p>我发布的产品</p>
+                                    <Link to="/userPublish" className="link">
+                                        <p>我发布的产品</p>
+                                    </Link>
                                 </div>
                                 <span className="weui_cell_ft"></span>
                             </a>
                             <a className="weui_cell" href="javascript:;">
                                 <div className="weui_cell_hd"></div>
                                 <div className="weui_cell_bd weui_cell_primary">
-                                    <p>我的收藏</p>
+                                    <Link to="/userCollect" className="link">
+                                        <p>我的收藏</p>
+                                    </Link>
                                 </div>
                                 <span className="weui_cell_ft"></span>
                             </a>

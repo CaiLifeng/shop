@@ -7,17 +7,17 @@ var Product = require('../models').Product;
 var config = require('../config');
 
 var product = {
-    //ÐÂÔö²úÆ·
+
     add: function (req, res, next) {
-        if (!req.body.userId||!req.body.title || !req.body.price || !req.body.address || !req.body.description || !req.body.latitude || !req.body.longitude || !req.body.category) {
+        if (!req.body.userId || !req.body.title || !req.body.price || !req.body.address || !req.body.description || !req.body.latitude || !req.body.longitude || !req.body.category) {
             return res.json({
                 resultCode: 0,
-                resultMsg: 'È±ÉÙÑéÖ¤²ÎÊý'
+                resultMsg: 'ç¼ºå°‘éªŒè¯å‚æ•°'
             });
         }
-        //newÒ»¸öÊµÀý
+
         var product = new Product({
-            userId:req.body.userId,
+            userId: req.body.userId,
             title: req.body.title,
             price: req.body.price,
             address: req.body.address,
@@ -31,7 +31,7 @@ var product = {
             images: req.body.images
         });
 
-        //±£´æµ½Êý¾Ý¿â
+
         product.save(function (err) {
             if (err) {
                 next(err);
@@ -44,7 +44,6 @@ var product = {
         });
     },
 
-    //»ñÈ¡²úÆ·ÁÐ±í£¬·ÖÒ³£¬É¸Ñ¡
     getProducts: function (req, res, next) {
         var query = {};
         var start;
@@ -91,20 +90,19 @@ var product = {
         });
     },
 
-    getProductById:function(req,res,next){
+    getProductById: function (req, res, next) {
+        console.log(req.user);
         Product.findById(req.params.productId, function (err, product) {
-            if(err){
+            if (err) {
                 return next(err);
             }
-            if(product){
-                console.log(product.userId);
-                User.findById(product.userId,function(err,user){
-                    if(err){
+            if (product) {
+                User.findById(product.userId, function (err, user) {
+                    if (err) {
                         return next(err);
                     }
-                    product=product.toObject();
-                    product.user=user;
-                    console.log(product);
+                    product = product.toObject();
+                    product.user = user;
                     res.json({
                         resultCode: 1,
                         data: product
@@ -112,7 +110,7 @@ var product = {
 
                 });
             }
-            else{
+            else {
                 res.json({
                     resultCode: 1,
                     data: product
@@ -121,9 +119,15 @@ var product = {
         });
     },
 
-    getUserPublishByUserId:function(req,res,next){
-        Product.find({userId:req.params.userId}, function (err, product) {
-            if(err){
+    getUserPublishByUserId: function (req, res, next) {
+        if (!req.query.userId) {
+            return res.json({
+                resultCode: 0,
+                resultMsg: 'ç¼ºå°‘éªŒè¯å‚æ•°'
+            });
+        }
+        Product.find({userId: req.params.userId}, function (err, product) {
+            if (err) {
                 return next(err);
             }
             res.json({
@@ -133,15 +137,21 @@ var product = {
         });
     },
 
-    getUserCollectByUserId:function(req,res,next){
-        User.findById(req.params.userId,function(err,user){
-            if(err){
+    getUserCollectByUserId: function (req, res, next) {
+        if (!req.query.userId) {
+            return res.json({
+                resultCode: 0,
+                resultMsg: 'ç¼ºå°‘éªŒè¯å‚æ•°'
+            });
+        }
+        User.findById(req.params.userId, function (err, user) {
+            if (err) {
                 return next(err);
             }
-            if(user){
-                var collect=user.collect;
-                Product.find({_id: { $in : collect } },function(err,product){
-                    if(err){
+            if (user) {
+                var collect = user.collect;
+                Product.find({_id: {$in: collect}}, function (err, product) {
+                    if (err) {
                         return next(err);
                     }
                     res.json({
@@ -153,8 +163,8 @@ var product = {
             }
 
         });
-        Product.find({userId:req.params.userId}, function (err, product) {
-            if(err){
+        Product.find({userId: req.params.userId}, function (err, product) {
+            if (err) {
                 return next(err);
             }
             res.json({
@@ -163,6 +173,88 @@ var product = {
             });
         });
     },
+
+    collect: function (req, res, next) {
+        if (!req.body.productId || !req.body.userId) {
+            return res.json({
+                resultCode: 0,
+                resultMsg: 'ç¼ºå°‘éªŒè¯å‚æ•°'
+            });
+        }
+        User.findById(req.body.userId, function (err, user) {
+            if (err) {
+                return next(err);
+            }
+
+            if (user) {
+                if(user.collect.indexOf(req.body.productId)>-1){
+                    return res.json({
+                        resultCode: 0,
+                        resultMsg:'ä¸èƒ½å†æ¬¡æ”¶è—'
+                    });
+                }
+                user.collect.push(req.body.productId);
+                user.save(function (err) {
+                    if (err) {
+                        return next(err);
+                    }
+                    res.json({
+                        resultCode: 1,
+                        user: user
+                    });
+
+                });
+            }
+            else {
+                res.json({
+                    resultCode: 0,
+                    resultMsg: 'æ²¡æœ‰æ­¤ç”¨æˆ·'
+                });
+            }
+
+        });
+    },
+
+    unCollect: function (req, res, next) {
+        if (!req.body.productId || !req.body.userId) {
+            return res.json({
+                resultCode: 0,
+                resultMsg: 'ç¼ºå°‘éªŒè¯å‚æ•°'
+            });
+        }
+        User.findById(req.body.userId, function (err, user) {
+            if (err) {
+                return next(err);
+            }
+
+            if (user) {
+                var index=user.collect.indexOf(req.body.productId);
+                if(index>-1){
+                    user.collect.splice(index,1);
+                }
+
+                user.save(function (err) {
+                    if (err) {
+                        return next(err);
+                    }
+                    res.json({
+                        resultCode: 1,
+                        user: user
+                    });
+
+                });
+            }
+            else {
+                res.json({
+                    resultCode: 0,
+                    resultMsg: 'æ²¡æœ‰æ­¤ç”¨æˆ·'
+                });
+            }
+
+        });
+    },
+
+
 };
 
-module.exports=product;
+module.exports = product;

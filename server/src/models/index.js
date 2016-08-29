@@ -27,6 +27,7 @@ const ProductSchema = new Schema({
         latitude: {type: String},
         longitude: {type: String}
     },
+    createTime:{ type: Date, default: Date.now },
     telephone: {type: String},
     category: {type: String},
     description: {type: String},

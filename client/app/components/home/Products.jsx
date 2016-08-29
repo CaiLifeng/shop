@@ -27,20 +27,17 @@ export default class Products extends React.Component {
         }
     };
 
-
-
     render() {
-        const {data,isMore,...others} = this.props;
+        const {data,isMore,className,...others} = this.props;
 
         var productsList = data.map(function (item, idx) {
             return (
-                <Product imgSrc={item.images[0]} key={idx} id={item._id} title={item.title}
-                         digest={item.description}></Product>
+                <Product imgSrc={item.images[0]} key={idx} id={item._id} price={item.price} category={item.category} title={item.title}
+                         createTime={item.createTime}></Product>
             );
         });
-
         return (
-            <div className="m-t-0 products">
+            <div className={className}>
                 {productsList}
                 <a className="text-center more-link" onClick={this.onMoreClick.bind(this)} href="javascript:void(0);">{isMore?'查看更多':'已全部加载'}</a>
             </div>

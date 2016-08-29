@@ -6,18 +6,18 @@ import config from '../../config.js';
 
 export default class ProductDetail extends React.Component {
     state = {
-        productDetail:{},
-        user:{}
+        productDetail: {},
+        user: {}
     };
 
     componentDidMount() {
-        let that=this;
-        let url = config.apiUrl.products+'/'+this.props.params.productId;
+        let that = this;
+        let url = config.apiUrl.products + '/' + this.props.params.productId;
         axiosIns.get(url).then(function (data) {
             if (data.resultCode == 1) {
                 that.setState({
-                    productDetail:data.data,
-                    user:data.data.user||{}
+                    productDetail: data.data,
+                    user: data.data.user || {}
                 });
             }
             else {
@@ -37,9 +37,9 @@ export default class ProductDetail extends React.Component {
     }
 
     render() {
-        let images=[];
-        if(this.state.productDetail.images){
-            this.state.productDetail.images.forEach(function(item,index,array){
+        let images = [];
+        if (this.state.productDetail.images) {
+            this.state.productDetail.images.forEach(function (item, index, array) {
                 images.push({
                     original: item,
                     thumbnail: item,
@@ -48,7 +48,6 @@ export default class ProductDetail extends React.Component {
                 });
             });
         }
-
 
 
         return (
@@ -62,9 +61,12 @@ export default class ProductDetail extends React.Component {
                     showIndex={true}
                     showThumbnails={false}
                     showNav={false}/>
+
                 <div className="weui_panel p-l-10 p-r-10">
                     <p className="title">{this.state.productDetail.title}</p>
+
                     <p className="price">￥{this.state.productDetail.price}</p>
+
                     <div className="det-line">
                         <div className="span-group">
                             <span className="text-gray">交易方式：</span>
@@ -94,7 +96,9 @@ export default class ProductDetail extends React.Component {
                     </div>
                 </div>
 
-                <Contact image={this.state.user.image} telephone={this.state.user.telephone} name={this.state.user.name}>
+                <Contact userId={this.state.user._id} productId={this.props.params.productId}
+                         image={this.state.user.image} telephone={this.state.user.telephone}
+                         name={this.state.user.name}>
                 </Contact>
             </div>
         );

@@ -31,8 +31,13 @@ router.post('/updateUserInfo',expressJwt({secret: config.secretKey}), middleware
 //根据用户id获取用户信息
 router.get('/user/:userId',expressJwt({secret: config.secretKey}), middlewares.authError,api.user.getUserById);
 //根据用户id获取用户发布的产品
-router.get('/userPublish/:userId',expressJwt({secret: config.secretKey}), middlewares.authError,api.product.getUserPublishByUserId);
+router.get('/userPublish',expressJwt({secret: config.secretKey}), middlewares.authError,api.product.getUserPublishByUserId);
 //根据用户id获取用户收藏的产品
-router.get('/userPuCollect/:userId',expressJwt({secret: config.secretKey}), middlewares.authError,api.product.getUserCollectByUserId);
+router.get('/userCollect',expressJwt({secret: config.secretKey}), middlewares.authError,api.product.getUserCollectByUserId);
+//用户收藏产品
+router.post('/collect',expressJwt({secret: config.secretKey}), middlewares.authError,api.product.collect);
+//用户取消收藏产品
+router.post('/unCollect',expressJwt({secret: config.secretKey}), middlewares.authError,api.product.unCollect);
+
 
 module.exports = router;

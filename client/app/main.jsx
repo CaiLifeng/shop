@@ -9,7 +9,9 @@ import NavBar from './components/NavBar';
 import ProductDetail from './components/productDetail/ProductDetail';
 import Login from './components/Login';
 import Information from './components/Information';
-import Personal from './components/personal/Personal'
+import UserCollect from './components/userCollect/UserCollect';
+import Personal from './components/personal/Personal';
+import UserPublish from './components/userPublish/UserPublish';
 import axios from 'axios';
 
 require('weui');
@@ -24,6 +26,8 @@ ReactDOM.render(
             <Route path="products" component={Home}/>
             <Route path="publish" component={Publish}/>
             <Route path="personal" component={Personal}/>
+            <Route path="userCollect" component={UserCollect}/>
+            <Route path="userPublish" component={UserPublish}/>
         </Route>
         <Route path="/product/:productId" component={ProductDetail}/>
         <Route path="/login" component={Login}/>
