@@ -96,7 +96,7 @@ export default class ProductDetail extends React.Component {
                     </div>
                 </div>
 
-                <Contact userId={this.state.user._id} productId={this.props.params.productId}
+                <Contact isCollect={this.state.productDetail.isCollect} userId={this.state.user._id} productId={this.props.params.productId}
                          image={this.state.user.image} telephone={this.state.user.telephone}
                          name={this.state.user.name}>
                 </Contact>

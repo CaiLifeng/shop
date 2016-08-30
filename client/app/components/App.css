@@ -265,7 +265,7 @@ li{
 /*contact start*/
 .contact{
     height: 50px;
-    background-color: white;
+    background-color: #fbf9fe;
 }
 .contact .per-info{
     width: 50%;
@@ -288,7 +288,7 @@ li{
 }
 .contact .tab{
     width: 25%;
-    float: left;
+    float: right;
     height: 50px;
     text-align: center;
     color: #ffffff;

@@ -90,7 +90,14 @@ var product = {
         });
     },
 
+    //isCollect参数，0表示没有收藏，1表示已经收藏，2表示创建者是自己
     getProductById: function (req, res, next) {
+        if (!req.params.productId) {
+            return res.json({
+                resultCode: 0,
+                resultMsg: '缺少验证参数'
+            });
+        }
         console.log(req.user);
         Product.findById(req.params.productId, function (err, product) {
             if (err) {
@@ -101,32 +108,58 @@ var product = {
                     if (err) {
                         return next(err);
                     }
-                    product = product.toObject();
-                    product.user = user;
-                    res.json({
-                        resultCode: 1,
-                        data: product
-                    });
+                    if(user){
+                        product = product.toObject();
+                        product.user = user;
+                        User.findById(req.user.userId,function(err,user){
+                            if(err){
+                                return next(err);
+                            }
+                            if(user){
+                                if(product.userId==req.user.userId){
+                                    product.isCollect=2;
+                                }
+                                else if(user.collect.indexOf(req.params.productId)>-1){
+                                    product.isCollect=1;
+                                }
+                                else{
+                                    product.isCollect=0;
+                                }
+                                res.json({
+                                    resultCode: 1,
+                                    data: product
+                                });
+                            }
+                            else{
+                                return res.json({
+                                    resultCode: 0,
+                                    resultMsg:'找不到用户信息'
+                                });
+                            }
+                        });
+
+                    }
+                    else{
+                        res.json({
+                            resultCode:0,
+                            result:'找不到发布用户信息'
+                        });
+                    }
+
 
                 });
             }
             else {
                 res.json({
-                    resultCode: 1,
-                    data: product
+                    resultCode:0,
+                    result:'找不到产品信息'
                 });
             }
         });
     },
 
     getUserPublishByUserId: function (req, res, next) {
-        if (!req.query.userId) {
-            return res.json({
-                resultCode: 0,
-                resultMsg: '缺少验证参数'
-            });
-        }
-        Product.find({userId: req.params.userId}, function (err, product) {
+        Product.find({userId: req.user.userId}, function (err, product) {
             if (err) {
                 return next(err);
             }
@@ -138,13 +171,7 @@ var product = {
     },
 
     getUserCollectByUserId: function (req, res, next) {
-        if (!req.query.userId) {
-            return res.json({
-                resultCode: 0,
-                resultMsg: '缺少验证参数'
-            });
-        }
-        User.findById(req.params.userId, function (err, user) {
+        User.findById(req.user.userId, function (err, user) {
             if (err) {
                 return next(err);
             }
@@ -163,29 +190,22 @@ var product = {
             }
 
         });
-        Product.find({userId: req.params.userId}, function (err, product) {
-            if (err) {
-                return next(err);
-            }
-            res.json({
-                resultCode: 1,
-                data: product
-            });
-        });
     },
 
     collect: function (req, res, next) {
-        if (!req.body.productId || !req.body.userId) {
+        if (!req.body.productId ) {
             return res.json({
                 resultCode: 0,
                 resultMsg: '缺少验证参数'
             });
         }
-        User.findById(req.body.userId, function (err, user) {
+
+        var userId=req.user.userId;
+
+        User.findById(userId, function (err, user) {
             if (err) {
                 return next(err);
             }
-
             if (user) {
                 if(user.collect.indexOf(req.body.productId)>-1){
                     return res.json({
@@ -216,13 +236,16 @@ var product = {
     },
 
     unCollect: function (req, res, next) {
-        if (!req.body.productId || !req.body.userId) {
+        if (!req.body.productId) {
             return res.json({
                 resultCode: 0,
                 resultMsg: '缺少验证参数'
             });
         }
-        User.findById(req.body.userId, function (err, user) {
+
+        var userId=req.user.userId;
+
+        User.findById(userId, function (err, user) {
             if (err) {
                 return next(err);
             }

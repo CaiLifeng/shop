@@ -19,7 +19,7 @@ router.post('/products', expressJwt({secret: config.secretKey}), middlewares.aut
 //获取产品列表
 router.get('/products', api.product.getProducts);
 //根据产品id获取产品信息
-router.get('/products/:productId', api.product.getProductById);
+router.get('/products/:productId',expressJwt({secret: config.secretKey}), middlewares.authError,  api.product.getProductById);
 //获取七牛token
 router.get('/getQnToken', expressJwt({secret: config.secretKey}), middlewares.authError, api.common.getQnToken);
 //获取位置

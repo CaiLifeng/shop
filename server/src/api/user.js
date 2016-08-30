@@ -24,7 +24,7 @@ var user = {
                     }
                     //如果验证码正确，通过并返回token
                     if (user) {
-                        var token = jwt.sign({telephone: telephone, userId: user.ObjectId}, config.secretKey);
+                        var token = jwt.sign({telephone: telephone, userId: user._id}, config.secretKey);
                         res.json({
                             resultCode: 1,
                             user: user,
