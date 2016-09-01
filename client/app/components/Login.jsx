@@ -46,6 +46,7 @@ export default class Login extends React.Component {
                 .then(function (data) {
                     if (data.resultCode == 1) {
                         localStorage.setItem('token',data.token);
+                        axiosIns.defaults.headers.common['Authorization'] = 'Bearer ' + data.token;
                         localStorage.setItem('user', JSON.stringify(data.user));
                         if (data.user.name) {
                             hashHistory.push('/products');
