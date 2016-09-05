@@ -22,16 +22,16 @@ const config = {
         unCollect: apiRoot + 'unCollect',//用户收藏产品
     },
 
-    //百度key
+    //百度key，用于定位
     baiduKey: 'u4doiw4efjtMPKYVPTeiTbFh',
 
     //价格区间,区间以~相隔
     priceList: ['不限', '0~1000', '1000~2000', '2000~3000', '3000~4000'],
 
-    //品种列表
-    categoryList: ['不限', '苹果', '小米', '魅族', '华为'],
+    //品种列表,需要跟server的一样
+    categoryList: ['不限', '苹果', '小米', '魅族', '华为','三星'],
 
-    //交易方式
+    //交易方式,需要跟server的一样
     tradeType: ['不限', '当面', '快递']
 };
 
