@@ -4,12 +4,12 @@
 ![Image of Yaktocat](http://obbapcolf.bkt.clouddn.com/5d70eeb210b5157af07b9e3d7323521c.png)
 
 **配置步骤**
-1. 下载
+1.下载
 ```
 git clone https://github.com/CaiLifeng/shop.git
 ```
 
-2. 配置client端,将会生成build文件夹。
+2.配置client端,将会生成build文件夹。
 
 ```
 cd client
@@ -17,13 +17,13 @@ npm install
 npm run deploy
 ```
 
-3. 安装mongodb，新建collection shop，进入到server文件夹，运行命令
+3.安装mongodb，新建collection shop，进入到server文件夹，运行命令
 
 ```
 mongoimport -d shop -c areas < glossary.json
 ```
 
-4. 配置server端。
+4.配置server端。
 ```
 npm install
 npm install pm2 -g
@@ -31,7 +31,7 @@ cd bin
 pm2 start www.js
 ```
 
-5. 配置nginx代理
+5.配置nginx代理
 
 ```
 server {
