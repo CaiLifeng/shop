@@ -20,7 +20,7 @@ npm run deploy
 3.安装mongodb，新建collection shop，进入到server文件夹，运行命令
 
 ```
-mongoimport -d shop -c areas < glossary.json
+mongoimport -d shop -c areas < area.json
 ```
 
 4.配置server端。
