@@ -1,6 +1,6 @@
 {
-  "name": "react-babel-webpack-boilerplate",
-  "version": "1.2.2",
+  "name": "shop",
+  "version": "1.0",
   "description": "",
   "main": "app/main.jsx",
   "scripts": {
@@ -9,7 +9,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "webpack",
     "start": "webpack-dev-server --devtool eval --progress --hot",
-    "deploy": "webpack -p --progress --config webpack.production.config.js",
+    "deploy": "webpack --config webpack.production.config.js",
     "validate": "npm ls",
     "commit": "git cz",
     "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s -r 1"
@@ -59,8 +59,8 @@
   "keywords": [
     "es6",
     "web app",
-    "boilerplate"
+    "shop"
   ],
-  "author": "Ruan Yifeng",
+  "author": "clf",
   "license": "MIT"
 }

@@ -37,7 +37,7 @@ gulp.task('run', function () {
     });
 });
 
-//清楚build文件夹
+//清除build文件夹
 gulp.task('clean', function () {
     return gulp.src(['build'], {read: false})
         .pipe(clean());

@@ -27,7 +27,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(middlewares.setHeader);
 
-//其他接口
+//接口
 app.use('/api/', routes);
 
 
