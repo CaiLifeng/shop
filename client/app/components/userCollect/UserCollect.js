@@ -34,7 +34,7 @@ export default class UserCollect extends React.Component {
 
     render() {
         return (
-            <div className="content">
+            <div className="content p-b-50">
                 {
                     this.state.productList.map(function (item, idx) {
                         return (

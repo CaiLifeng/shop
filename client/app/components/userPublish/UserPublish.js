@@ -34,7 +34,7 @@ export default class UserPublish extends React.Component {
 
     render() {
         return (
-            <div className="content">
+            <div className="content b-50">
                 {
                     this.state.productList.map(function (item, idx) {
                         return (

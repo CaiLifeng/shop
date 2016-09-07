@@ -41,7 +41,7 @@ export default class Home extends React.Component {
         }]
     };
 
-    getProducts({pageIndex=0, address='', category='', priceMin='', priceMax='',tradeType='',title='',pageSize=10}) {
+    getProducts({pageIndex=0, address='', category='', priceMin='', priceMax='',tradeType='',title='',pageSize=5}) {
         const that = this;
         let url = config.apiUrl.products + '?pageSize=' + pageSize + '&pageIndex=' + pageIndex + '&address=' + address + '&category=' + category + '&priceMin=' + priceMin + '&priceMax=' + priceMax + '&tradeType=' + tradeType + '&title=' + title;
         axiosIns.get(url).then(function (data) {

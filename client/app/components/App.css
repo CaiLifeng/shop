@@ -15,6 +15,9 @@
 .bg-gray{
     background-color: #f8f8f8;
 }
+.text-center{
+    text-align: center;
+}
 .text-sm{
     font-size: 12px;
 }
@@ -26,6 +29,9 @@
 }
 .text-orange{
     color:orange;
+}
+.b-50{
+    bottom: 50px;
 }
 .bg-default{
     background-color: #fbf9fe;

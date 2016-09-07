@@ -2,7 +2,7 @@
  * Created by clf on 2016/8/6.
  */
 
-const apiRoot = '/api/'
+const apiRoot = '/api/';
 
 const config = {
     //api地址

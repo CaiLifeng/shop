@@ -1,18 +1,12 @@
 {
-  "name": "shop",
-  "version": "1.0",
-  "description": "",
+  "name": "shopClient",
+  "version": "0.0.0",
+  "description": "a shop project wrote by react",
   "main": "app/main.jsx",
   "scripts": {
-    "lint": "eslint 'app/**/*.@(js|jsx)'",
-    "lint:msg": "validate-commit-msg",
-    "test": "echo \"Error: no test specified\" && exit 1",
     "build": "webpack",
     "start": "webpack-dev-server --devtool eval --progress --hot",
-    "deploy": "webpack --config webpack.production.config.js",
-    "validate": "npm ls",
-    "commit": "git cz",
-    "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s -r 1"
+    "deploy": "webpack --config webpack.production.config.js"
   },
   "dependencies": {
     "axios": "^0.13.1",
