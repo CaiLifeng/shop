@@ -31,12 +31,15 @@ cd bin
 pm2 start www.js
 ```
 
-5.配置nginx代理
+5.配置nginx代理,因为location api必须在https环境下才能使用。这里的证书需要自己生成,可以参考http://www.liaoxuefeng.com/article/0014189023237367e8d42829de24b6eaf893ca47df4fb5e000
 
 ```
 server {
-        listen       8088;
+        listen       443 ssl;
         server_name  localhost;
+
+	ssl_certificate    /etc/nginx/ssl/www.shsf4.com.crt;
+	ssl_certificate_key  /etc/nginx/ssl/www.shsf4.com.key;
 
         #charset koi8-r;
 
