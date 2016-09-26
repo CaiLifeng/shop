@@ -48,5 +48,10 @@ module.exports = {
       { from: './app/index.html', to: 'index.html' },
       { from: './app/main.css', to: 'main.css' }
     ]),
+    new webpack.DefinePlugin({
+      "process.env": {
+        NODE_ENV: JSON.stringify("production")
+      }
+    })
   ]
 };

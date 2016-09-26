@@ -3,9 +3,25 @@ import config from '../../config.js'
 import axiosIns from '../../utils.js';
 import axios from 'axios';
 import Qiniu from 'qiniu.js';
-import {Form,FormCell,CellBody,Uploader,CellHeader,Select,Input,Label,CellFooter,vcodeSrc,Icon,TextArea,section,ButtonArea,Button} from 'react-weui';
+import {
+    Form,
+    FormCell,
+    CellBody,
+    Uploader,
+    CellHeader,
+    Select,
+    Input,
+    Label,
+    CellFooter,
+    vcodeSrc,
+    Icon,
+    TextArea,
+    section,
+    ButtonArea,
+    Button
+} from 'react-weui';
 import {Toast} from 'react-weui';
-import { browserHistory,hashHistory } from 'react-router';
+import {browserHistory, hashHistory} from 'react-router';
 
 
 export default class Publish extends React.Component {
@@ -70,19 +86,18 @@ export default class Publish extends React.Component {
         //获取七牛token
         (function getQnToken() {
             axiosIns.get(config.apiUrl.getQnToken).then(function (data) {
-                if(data.resultCode==1){
+                if (data.resultCode == 1) {
                     that.setState({
                         qnToken: data.data.uploadToken
                     });
-                    console.log(data.data.uploadToken);
                 }
-                else{
+                else {
                     console.log(data);
                 }
             })
-            .catch(function (error) {
-                console.log(error);
-            });
+                .catch(function (error) {
+                    console.log(error);
+                });
         })();
     }
 
@@ -114,11 +129,9 @@ export default class Publish extends React.Component {
 
                 axiosInstance({
                     method: 'post',
-                    url: 'http://upload.qiniu.com/',
+                    url: config.uploadUrl,
                     data: formData,
                     progress: function (progressEvent) {
-                        console.log(progressEvent);
-
                         let newFiles = that.state.demoFiles.slice(0);
                         newFiles[newFiles.length - 1].status = parseInt(progressEvent.loaded / progressEvent.total * 100) + '%';
                         that.setState({
@@ -147,7 +160,7 @@ export default class Publish extends React.Component {
 
     submit() {
         let that = this;
-        let userId=JSON.parse(localStorage.getItem('user'))._id;
+        let userId = JSON.parse(localStorage.getItem('user'))._id;
         let description = this.state.description;
         let title = this.state.title;
         let price = this.state.price;
@@ -159,7 +172,7 @@ export default class Publish extends React.Component {
             images.push(item.sourceUrl);
         });
 
-        if (!userId||!description || !title || !price || !location || !category || !tradeType) {
+        if (!userId || !description || !title || !price || !location || !category || !tradeType) {
             that.setState({showToast: true, toastText: '缺少验证参数'});
             setTimeout(function () {
                 that.setState({showToast: false, toastText: ''});
@@ -168,7 +181,7 @@ export default class Publish extends React.Component {
         }
 
         axiosIns.post(config.apiUrl.products, {
-            userId:userId,
+            userId: userId,
             title: title,
             price: price,
             category: category,
@@ -256,7 +269,7 @@ export default class Publish extends React.Component {
                                 onChange={file => {
                                     this.uploadFile(this.state.qnToken,file);
                                 }}
-                                />
+                            />
                         </CellBody>
                     </FormCell>
                 </Form>

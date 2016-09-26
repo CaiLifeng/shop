@@ -22,6 +22,8 @@ const config = {
         unCollect: apiRoot + 'unCollect',//用户收藏产品
     },
 
+    uploadUrl:'https://up.qbox.me',   //如果是http的话使用http://upload.qiniu.com
+
     //百度key，用于定位
     baiduKey: 'u4doiw4efjtMPKYVPTeiTbFh',
 
