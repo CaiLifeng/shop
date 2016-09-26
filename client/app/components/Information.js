@@ -14,11 +14,8 @@ import { browserHistory,hashHistory } from 'react-router';
 export default class Publish extends React.Component {
     state = {
         user:JSON.parse(localStorage.getItem('user')),
-        name: null,
-        sex: null,
-        age: null,
         qnToken: null,
-        demoFiles: JSON.parse(localStorage.getItem('user')).image?[{url:JSON.parse(localStorage.getItem('user')).image}]:[],
+        demoFiles: [],
         showToast: false,
         toastText: null
     };
@@ -90,10 +87,10 @@ export default class Publish extends React.Component {
         let id = this.state.user._id;
         let name = this.state.user.name;
         let age = this.state.user.age;
-        let sex = this.state.user.sex;
-        let image = this.state.user.image.sourceUrl;
+        let sex = this.state.user.sex||'男';
+        let image = this.state.user.image;
 
-        if (!id||!name || !age || !sex || !image) {
+        if (!id || !name || !age || !sex || !image) {
             that.setState({showToast: true, toastText: '缺少验证参数'});
             setTimeout(function () {
                 that.setState({showToast: false, toastText: ''});
@@ -101,12 +98,14 @@ export default class Publish extends React.Component {
             return;
         }
 
+        let imageUrl=image.sourceUrl;
+
         axiosIns.post(config.apiUrl.updateUserInfo, {
             id:id,
             name:name,
             age:age,
             sex:sex,
-            image:image
+            image:imageUrl
         }).then(function (data) {
             if (data.resultCode == 1) {
                 that.setState({showToast: true, toastText: '提交成功'});

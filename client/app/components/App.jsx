@@ -10,7 +10,7 @@ export default class App extends React.Component {
     return (
         <div>
             {this.props.children}
-            <NavBar/>
+            <NavBar className="fixed-bottom"/>
         </div>
     );
   }

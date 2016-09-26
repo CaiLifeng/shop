@@ -1,6 +1,6 @@
 import React from 'react';
 import ImageGallery from 'react-image-gallery';
-import Contact from './Contact';
+import Contact from './contact/Contact';
 import axiosIns from '../../utils.js';
 import config from '../../config.js';
 
@@ -98,7 +98,7 @@ export default class ProductDetail extends React.Component {
 
                 <Contact isCollect={this.state.productDetail.isCollect} userId={this.state.user._id} productId={this.props.params.productId}
                          image={this.state.user.image} telephone={this.state.user.telephone}
-                         name={this.state.user.name}>
+                         name={this.state.user.name} className="fixed-bottom">
                 </Contact>
             </div>
         );

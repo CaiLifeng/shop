@@ -1,13 +1,20 @@
 import React from 'react';
 import {Link,History} from 'react-router';
+import classNames from 'classnames'
 
 export default class NavBar extends React.Component {
     render() {
+        let {className,...others}=this.props;
+
+        let clz = classNames({
+            nav: true
+        }, className);
+
         return (
-            <div className="fixed-bottom nav">
+            <div className={clz}>
                 <ul>
-                    <li className="tab">
-                        <Link to="/home" className="link">
+                    <li className="tab" >
+                        <Link to="/home" className="link" activeStyle={{color: 'orange'}}>
                             <div className="icon-top">
                                 <i className="fa fa-home" aria-hidden="true"></i>
                             </div>
@@ -15,7 +22,7 @@ export default class NavBar extends React.Component {
                         </Link>
                     </li>
                     <li className="tab">
-                        <Link to="/publish" className="link">
+                        <Link to="/publish" className="link" activeStyle={{color: 'orange'}}>
                             <div className="icon-top">
                                 <i className="fa fa-plus" aria-hidden="true"></i>
                             </div>
@@ -23,7 +30,7 @@ export default class NavBar extends React.Component {
                         </Link>
                     </li>
                     <li className="tab">
-                        <Link to="/home" className="link">
+                        <Link to="/message" className="link" activeStyle={{color: 'orange'}}>
                             <div className="icon-top">
                                 <i className="fa fa-commenting" aria-hidden="true"></i>
                             </div>
@@ -31,7 +38,7 @@ export default class NavBar extends React.Component {
                         </Link>
                     </li>
                     <li className="tab">
-                        <Link to="/personal" className="link">
+                        <Link to="/personal" className="link" activeStyle={{color: 'orange'}}>
                             <div className="icon-top">
                                 <i className="fa fa-user" aria-hidden="true"></i>
                             </div>

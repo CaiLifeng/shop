@@ -1,6 +1,8 @@
 import React from 'react';
-import config from '../../config.js';
-import axiosIns from '../../utils.js';
+import config from '../../../config.js';
+import axiosIns from '../../../utils.js';
+import classNames from 'classnames';
+import styles from './Contact.css';
 import {Toast} from 'react-weui';
 export default class Contact extends React.Component {
     state = {
@@ -74,12 +76,16 @@ export default class Contact extends React.Component {
 
 
     render() {
-        console.log(this.state.isCollect);
+        const {isCollect, productId,name,telephone,image, className, ...others} = this.props;
+        let clzObj={};
+        clzObj[styles.contact]=true;
+        const clz = classNames(clzObj, className);
+
         return (
-            <div className="fixed-bottom contact">
-                <div className="per-info">
-                    <img className="per-logo" src={this.props.image}/>
-                    <span className="per-name">{this.props.name}</span>
+            <div className={clz}>
+                <div className={styles.per_info}>
+                    <img className={styles.per_logo} src={image}/>
+                    <span className={styles.per_name}>{name}</span>
                 </div>
                 {
                     //<div className="tab chat-tab">
@@ -91,18 +97,18 @@ export default class Contact extends React.Component {
                 }
 
 
-                <a href={"tel:"+this.props.telephone} className="tab contact-tab">
-                    <div className="icon-top">
+                <a href={"tel:"+telephone} className={styles.contact_tab}>
+                    <div className={styles.icon_top}>
                         <i className="fa fa-phone" aria-hidden="true"></i>
                     </div>
-                    <div className="tab-font">联系</div>
+                    <div className={styles.tab_font}>联系</div>
                 </a>
                 {
-                    this.state.isCollect == 2 ? '' : (<div className="tab chat-tab" onClick={this.collect.bind(this)}>
-                        <div className="icon-top">
+                    this.state.isCollect == 2 ? '' : (<div className={styles.chat_tab} onClick={this.collect.bind(this)}>
+                        <div className={styles.icon_top}>
                             <i className="fa fa-weixin" aria-hidden="true"></i>
                         </div>
-                        <div className="tab-font">{{0: '收藏', 1: '取消收藏'}[this.state.isCollect]}</div>
+                        <div className={styles.tab_font}>{{0: '收藏', 1: '取消收藏'}[this.state.isCollect]}</div>
                     </div>)
                 }
                 <Toast show={this.state.showToast}>

@@ -15,8 +15,7 @@ export default class FilterBar extends React.Component {
     state = {
         index: 0,
         focus: false,
-        data: this.props.data,
-        city: ''
+        data: this.props.data
     };
 
     handleExpandItemClick(idx, subItem, event) {
@@ -40,16 +39,17 @@ export default class FilterBar extends React.Component {
         else {
             this.setState({index: idx, focus: true});
         }
+        console.log(this.state);
     }
 
     renderCloseItems(data) {
         let items = data.map((item, idx)=> {
-            return <li className="tab" key={idx} onClick={this.handleHeaderClick.bind(this,item.id)}>
+            return (<li className="tab" style={{color:(this.state.index==item.id&&this.state.focus)?'red' : 'black'}} key={idx} onClick={this.handleHeaderClick.bind(this,item.id)}>
                 <span className="nav-font">{item.selected ? item.selected : item.name}</span>
                 <span className="icon-right">
-                    <i className="fa fa-angle-down" aria-hidden="true"></i>
+                    {(this.state.index==item.id&&this.state.focus)?<i className="fa fa-angle-up" aria-hidden="true"></i>:<i className="fa fa-angle-down" aria-hidden="true"></i>}
                 </span>
-            </li>
+            </li>)
         });
 
         return (
