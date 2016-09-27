@@ -95,8 +95,6 @@ export default class Contact extends React.Component {
                     //    <div className="tab-font">聊天</div>
                     //</div>
                 }
-
-
                 <a href={"tel:"+telephone} className={styles.contact_tab}>
                     <div className={styles.icon_top}>
                         <i className="fa fa-phone" aria-hidden="true"></i>

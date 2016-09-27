@@ -19,7 +19,8 @@ const config = {
         userPublish: apiRoot + 'userPublish',//获取用户发布的产品列表
         userCollect: apiRoot + 'userCollect',//获取用户收藏的产品列表
         collect: apiRoot + 'collect',//用户收藏产品
-        unCollect: apiRoot + 'unCollect',//用户收藏产品
+        unCollect: apiRoot + 'unCollect',//用户收藏产品,
+        delete:apiRoot + 'delete'//删除自己发布的产品,
     },
 
     uploadUrl:'https://up.qbox.me',   //如果是http的话使用http://upload.qiniu.com

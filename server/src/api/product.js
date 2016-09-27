@@ -276,8 +276,27 @@ var product = {
 
         });
     },
+    delete: function (req, res, next) {
+        if (!req.body.productId) {
+            return res.json({
+                resultCode: 0,
+                resultMsg: '缺少验证参数'
+            });
+        }
 
+        var userId=req.user.userId;
 
+        Product.remove({_id:req.body.productId,userId:userId}, function (err) {
+            if (err) {
+                return next(err);
+            }
+            res.json({
+                resultCode: 1,
+                resultMsg: '删除成功'
+            });
+
+        });
+    }
 };
 
 module.exports = product;

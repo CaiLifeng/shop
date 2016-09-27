@@ -38,6 +38,8 @@ router.get('/userCollect',expressJwt({secret: config.secretKey}), middlewares.au
 router.post('/collect',expressJwt({secret: config.secretKey}), middlewares.authError,api.product.collect);
 //用户取消收藏产品
 router.post('/unCollect',expressJwt({secret: config.secretKey}), middlewares.authError,api.product.unCollect);
+//用户删除自己发布的产品
+router.post('/delete',expressJwt({secret: config.secretKey}), middlewares.authError,api.product.delete);
 
 
 module.exports = router;
