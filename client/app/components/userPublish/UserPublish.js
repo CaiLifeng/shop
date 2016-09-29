@@ -79,11 +79,10 @@ export default class UserPublish extends React.Component {
         });
     }
 
-    handleDelCallBack(id) {
-        console.log(this.state);
-        console.log(id);
+    handleDelCallBack(id,event) {
+        console.log(event);
+        alert(id);
         this.setState({showConfirm: true, deleteProductId: id});
-        console.log(this.state);
     }
 
     render() {

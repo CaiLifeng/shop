@@ -29,10 +29,11 @@ export default class Product extends React.Component {
     };
 
     handleDelete(id,event){
-        console.log(this.props.delCallBack);
-        event.preventDefault();
+        console.log(event);
         event.stopPropagation();
+        event.stopImmediatePropagation();
         this.props.delCallBack(id);
+
     }
 
     render() {
@@ -40,7 +41,7 @@ export default class Product extends React.Component {
         const linkTo="/product/"+id;
         return (
             <div className="weui_panel_bd bd-b">
-                <Link to={linkTo} className="weui_media_box weui_media_appmsg">
+                <a href="#/product/57c560c60fa3c9e01c61446d" className="weui_media_box weui_media_appmsg">
                     <div className="weui_media_hd">
                         <img width="60px" height="60px" className="weui_media_appmsg_thumb" src={imgSrc} alt=""/>
                     </div>
@@ -53,7 +54,7 @@ export default class Product extends React.Component {
                         <span className="text-gray text-md pull-left">{moment(createTime).format('YYYY/MM/DD')}</span>
                         <span className="text-orange pull-right">{price+'元'}</span>
                     </div>
-                </Link>
+                </a>
             </div>
         );
     }
