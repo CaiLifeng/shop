@@ -14,44 +14,47 @@ export default class UserPublish extends React.Component {
         showAlert: false,
         showConfirm: false,
         deleteProductId: '',
+        showToast:false,
+        toastText:'',
         confirm: {
-            title: '标题标题',
+            title: '确认删除？',
             buttons: [
-                {
-                    type: 'default',
-                    label: '取消',
-                    onClick: this.hideConfirm.bind(this)
-                },
+
                 {
                     type: 'primary',
                     label: '确定',
                     onClick: this.deleteProduct.bind(this)
+                },
+                {
+                    type: 'default',
+                    label: '取消',
+                    onClick: this.hideConfirm.bind(this)
                 }
             ]
         }
     };
 
+    //删除
     deleteProduct() {
         const that = this;
         axiosIns.post(config.apiUrl.delete, {
             productId: this.state.deleteProductId
         }).then(function (data) {
             if (data.resultCode == 1) {
-                that.setState({showToast: true, toastText: '删除成功', isCollect: 1});
-                setTimeout(function () {
-                    that.setState({showToast: false, toastText: ''});
-                }, 1000);
+                that.hideConfirm();
+                that.getProducts({pageIndex: 0});
             }
             else {
                 that.setState({showToast: true, toastText: data.resultMsg});
                 setTimeout(function () {
                     that.setState({showToast: false, toastText: ''});
                 }, 1000);
+                that.hideConfirm.bind(this);
             }
         })
-            .catch(function (error) {
-                console.log(error);
-            });
+        .catch(function (error) {
+            console.log(error);
+        });
     }
 
     hideConfirm() {
@@ -79,9 +82,7 @@ export default class UserPublish extends React.Component {
         });
     }
 
-    handleDelCallBack(id,event) {
-        console.log(event);
-        alert(id);
+    handleDelCallBack(id) {
         this.setState({showConfirm: true, deleteProductId: id});
     }
 
@@ -105,6 +106,9 @@ export default class UserPublish extends React.Component {
                     buttons={this.state.confirm.buttons}>
                     确定要删除？
                 </Confirm>
+                <Toast show={this.state.showToast}>
+                    {this.state.toastText}
+                </Toast>
             </div>
         );
     }

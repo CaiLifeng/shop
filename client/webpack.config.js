@@ -25,6 +25,7 @@ module.exports = {
         'webpack-dev-server/client?http://localhost:3001',
         path.resolve(__dirname, 'app/main.jsx')
     ],
+    devtool: 'source-map',
     output: {
         path: __dirname + '/build',
         publicPath: '/',

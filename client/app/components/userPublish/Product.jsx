@@ -1,5 +1,5 @@
 import React from 'react';
-import { Router, Route, Link } from 'react-router'
+import { Router, Route, Link,hashHistory } from 'react-router'
 import moment from 'moment'
 import {Toast,Dialog} from 'react-weui';
 import config from '../../config.js';
@@ -28,33 +28,34 @@ export default class Product extends React.Component {
         delCallBack:undefined
     };
 
-    handleDelete(id,event){
-        console.log(event);
-        event.stopPropagation();
-        event.stopImmediatePropagation();
+    handleDelete(id,e){
+        e.stopPropagation();
         this.props.delCallBack(id);
+    }
 
+    handleToDetail(){
+        const linkTo="/product/"+this.props.id;
+        hashHistory.push(linkTo);
     }
 
     render() {
         const {id,imgSrc,title,category,createTime,price, ...others} = this.props;
-        const linkTo="/product/"+id;
         return (
             <div className="weui_panel_bd bd-b">
-                <a href="#/product/57c560c60fa3c9e01c61446d" className="weui_media_box weui_media_appmsg">
+                <div onClick={this.handleToDetail.bind(this)} className="weui_media_box weui_media_appmsg">
                     <div className="weui_media_hd">
                         <img width="60px" height="60px" className="weui_media_appmsg_thumb" src={imgSrc} alt=""/>
                     </div>
-                    <div className="weui_media_bd"  style={{'min-height':'60px'}}>
+                    <div className="weui_media_bd"  style={{'minHeight':'60px'}}>
                         <h4 className="weui_media_title">
                             {title}
-                            <i className="fa fa-trash pull-right text-gray" onClick={this.handleDelete.bind(this,id,event)} aria-hidden="true"></i>
+                            <i className="fa fa-trash pull-right text-gray" onClick={this.handleDelete.bind(this,id)} aria-hidden="true"></i>
                         </h4>
                         <p className="text-gray text-md">{category}</p>
                         <span className="text-gray text-md pull-left">{moment(createTime).format('YYYY/MM/DD')}</span>
                         <span className="text-orange pull-right">{price+'元'}</span>
                     </div>
-                </a>
+                </div>
             </div>
         );
     }

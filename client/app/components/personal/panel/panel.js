@@ -16,24 +16,18 @@ export default class Panel extends React.Component {
                     <div className="weui_panel_bd">
                         <div className="weui_media_box weui_media_small_appmsg">
                             <div className="weui_cells weui_cells_access">
-                                <a className="weui_cell" href="javascript:;">
-                                    <div className="weui_cell_hd"></div>
+                                <Link to="/userPublish" className="weui_cell link">
                                     <div className="weui_cell_bd weui_cell_primary">
-                                        <Link to="/userPublish" className="link">
-                                            <p>我发布的产品</p>
-                                        </Link>
+                                        <p>我发布的产品</p>
                                     </div>
                                     <span className="weui_cell_ft"></span>
-                                </a>
-                                <a className="weui_cell" href="javascript:;">
-                                    <div className="weui_cell_hd"></div>
+                                </Link>
+                                <Link to="/userPublish" className="weui_cell link">
                                     <div className="weui_cell_bd weui_cell_primary">
-                                        <Link to="/userCollect" className="link">
-                                            <p>我的收藏</p>
-                                        </Link>
+                                        <p>我的收藏</p>
                                     </div>
                                     <span className="weui_cell_ft"></span>
-                                </a>
+                                </Link>
                             </div>
                         </div>
                     </div>
