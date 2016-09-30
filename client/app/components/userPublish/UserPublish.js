@@ -17,7 +17,7 @@ export default class UserPublish extends React.Component {
         showToast:false,
         toastText:'',
         confirm: {
-            title: '确认删除？',
+            title: '',
             buttons: [
 
                 {

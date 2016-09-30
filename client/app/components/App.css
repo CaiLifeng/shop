@@ -125,8 +125,24 @@ li{
 .clearfix{
     clear: both;
 }
+.w-p-80{
+    width: 80%;
+}
+.w-p-20{
+    width: 20%;
+}
+.inline{
+    display: inline;
+}
 /*common end*/
 
+
+/*Header start*/
+.header{
+    background-color: orange;
+
+}
+/*Header end*/
 
 /*NavBar start*/
 .nav{
@@ -140,6 +156,7 @@ li{
     height: 50px;
     text-align: center;
 }
+
 .nav .tab:active{
     color:orange;
 }

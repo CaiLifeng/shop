@@ -13,7 +13,7 @@ export default class Product extends React.Component {
                     <div className="weui_media_hd">
                         <img width="60px" height="60px" className="weui_media_appmsg_thumb" src={imgSrc} alt=""/>
                     </div>
-                    <div className="weui_media_bd"  style={{'min-height':'60px'}}>
+                    <div className="weui_media_bd"  style={{'minHeight':'60px'}}>
                         <h4 className="weui_media_title">{title}</h4>
                         <p className="text-gray text-md">{category}</p>
                         <span className="text-gray text-md pull-left">{moment(createTime).format('YYYY/MM/DD')}</span>

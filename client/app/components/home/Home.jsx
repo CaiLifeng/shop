@@ -4,6 +4,8 @@ import FilterBar from './FilterBar';
 import WeUI from 'react-weui';
 import axiosIns from '../../utils.js';
 import config from '../../config.js';
+import Header from './Header'
+
 require('./../App.css');
 
 const {SearchBar} = WeUI;
@@ -143,6 +145,7 @@ export default class Home extends React.Component {
     render() {
         return (
             <div className="content">
+                <Header></Header>
                 <SearchBar onChange={this.handelSearch.bind(this)} onClear={this.handelClear.bind(this)}
                            placeholder="搜索标题"/>
                 <FilterBar data={this.state.filterData} onSelectChange={this.filterBarSelectChange.bind(this)}/>
