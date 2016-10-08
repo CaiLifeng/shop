@@ -7,7 +7,7 @@ var Area = require('../models').Area;
 var request = require('request');
 
 var common = {
-    //»ñÈ¡ÆßÅ£token
+    //è·å–ä¸ƒç‰›token
     getQnToken: function (req, res, next) {
         var client = qn.create({
             accessKey: config.qn_access.accessKey,
@@ -27,7 +27,7 @@ var common = {
         });
     },
 
-    //¸ù¾İÊĞ»ñÈ¡ÇøµÄÁĞ±í
+    //æ ¹æ®å¸‚è·å–åŒºçš„åˆ—è¡¨
     getRegions: function (req, res, next) {
         var cityName = req.params.cityName;
         Area.findOne({name: cityName.toString()}, function (err, city) {
@@ -49,7 +49,7 @@ var common = {
                 else {
                     res.json({
                         resultCode: 0,
-                        resultMsg: '²é²»µ½' + cityName
+                        resultMsg: 'æŸ¥ä¸åˆ°' + cityName
                     });
                 }
             }
@@ -71,14 +71,14 @@ var common = {
                 else {
                     res.json({
                         resultCode: 0,
-                        resultMsg: '½Ó¿Ú³ö´í'
+                        resultMsg: 'æ¥å£å‡ºé”™'
                     });
                 }
             }
             else {
                 res.json({
                     resultCode: 0,
-                    resultMsg: '½Ó¿Ú³ö´í'
+                    resultMsg: 'æ¥å£å‡ºé”™'
                 });
             }
         });
@@ -90,7 +90,7 @@ var common = {
         if (!latitude || !longitude) {
             res.json({
                 resultCode: 0,
-                resultMsg: 'È±ÉÙÑéÖ¤²ÎÊı'
+                resultMsg: 'ç¼ºå°‘éªŒè¯å‚æ•°'
             });
             return;
         }
@@ -100,7 +100,7 @@ var common = {
                     body = JSON.parse(body);
                     if (body.status == 0) {
                         var city = body.result.addressComponent.city;
-                        //ËÑË÷³ÇÊĞÏÂÃæµÄÇø
+                        //æœç´¢åŸå¸‚ä¸‹é¢çš„åŒº
                         Area.findOne({'name': city}, function (err, city) {
                             if (err) {
                                 return next(err);
@@ -124,7 +124,7 @@ var common = {
                                     else {
                                         res.json({
                                             resultCode: 0,
-                                            resultMsg: '´Ë³ÇÊĞÏÂÃæÃ»ÓĞÇø'
+                                            resultMsg: 'æ­¤åŸå¸‚ä¸‹é¢æ²¡æœ‰åŒº'
                                         });
                                     }
                                 });
@@ -132,7 +132,7 @@ var common = {
                             else {
                                 res.json({
                                     resultCode: 0,
-                                    resultMsg: '²éÕÒ²»µ½´Ë³ÇÊĞ'
+                                    resultMsg: 'æŸ¥æ‰¾ä¸åˆ°æ­¤åŸå¸‚'
                                 });
                             }
                         });
@@ -140,14 +140,14 @@ var common = {
                     else {
                         res.json({
                             resultCode: 0,
-                            resultMsg: '½Ó¿Ú³ö´í'
+                            resultMsg: 'æ¥å£å‡ºé”™'
                         });
                     }
                 }
                 else {
                     res.json({
                         resultCode: 0,
-                        resultMsg: '½Ó¿Ú³ö´í'
+                        resultMsg: 'æ¥å£å‡ºé”™'
                     });
                 }
             });
