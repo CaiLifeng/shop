@@ -39,7 +39,6 @@ export default class FilterBar extends React.Component {
         else {
             this.setState({index: idx, focus: true});
         }
-        console.log(this.state);
     }
 
     renderCloseItems(data) {

@@ -6,7 +6,11 @@ export default class Header extends React.Component {
     render() {
         return (
             <div className="header">
-                <h1 className="inline">{config.title}</h1>
+                <h1 className="inline text-white">{config.title}</h1>
+                <span className="position">
+                    <i className="text-white fa fa-2 fa-map-marker" aria-hidden="true"></i>
+                    <span className="city">深圳</span>
+                </span>
             </div>
         );
     }

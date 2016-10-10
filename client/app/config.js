@@ -5,7 +5,7 @@
 const apiRoot = '/api/';
 
 const config = {
-    title:'同城交易',
+    title:'测试',
     //api地址
     apiUrl: {
         geoCoder: 'http://api.map.baidu.com/geocoder/v2/',

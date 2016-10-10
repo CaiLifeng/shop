@@ -101,6 +101,9 @@ li{
 .m-l-10{
     margin-left: 10px;
 }
+.m-r-10{
+    margin-right: 10px;
+}
 .p-b-50{
     padding-bottom: 50px;
 }
@@ -139,8 +142,24 @@ li{
 
 /*Header start*/
 .header{
+    color:white;
+    height: 45px;
+    line-height: 45px;
     background-color: orange;
-
+    font-family: Open Sans;
+    position: relative;
+}
+.header h1{
+    font-size: 26px;
+    margin-left: 5px;
+}
+.header .position{
+    position: absolute;
+    right: 10px;
+}
+.header .city{
+    margin-left: 5px;
+    font-size: 14px;
 }
 /*Header end*/
 
@@ -209,7 +228,7 @@ li{
     background-color: rgba(0,0,0,0.2);
     width: 100%;
     z-index: 2;
-    top:80px;
+    top:125px;
     bottom: 0;
 }
 .filter-bar .expand{
@@ -233,7 +252,7 @@ li{
 
 .products{
     position: absolute;
-    top: 80px;
+    top: 130px;
     bottom: 50px;
     width: 100%;
     -webkit-overflow-scrolling : touch;
