@@ -15,6 +15,7 @@ const config = {
         getQnToken: apiRoot + 'getQnToken',//获取七牛token
         getLocationInfo: apiRoot + 'getLocationInfo',//获取地址
         products: apiRoot + 'products',//新增产品
+        provinces:apiRoot + 'provinces',//获取省份列表,
         districts: apiRoot + 'districts',//获取所在城市下面的区列表,
         updateUserInfo: apiRoot + 'updateUserInfo',//更新用户信息
         userPublish: apiRoot + 'userPublish',//获取用户发布的产品列表

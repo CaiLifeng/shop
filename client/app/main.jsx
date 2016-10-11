@@ -12,6 +12,7 @@ import Information from './components/Information';
 import UserCollect from './components/userCollect/UserCollect';
 import Personal from './components/personal/Personal';
 import UserPublish from './components/userPublish/UserPublish';
+import ChooseCity from './components/chooseCity/ChooseCity';
 import axios from 'axios';
 
 require('weui');
@@ -32,6 +33,7 @@ ReactDOM.render(
         <Route path="/product/:productId" component={ProductDetail}/>
         <Route path="/login" component={Login}/>
         <Route path="/regInfo" component={Information}/>
+        <Route path="/chooseCity" component={ChooseCity}/>
     </Router>,
     document.body.appendChild(document.createElement('div'))
 );

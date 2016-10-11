@@ -7,10 +7,10 @@ export default class Header extends React.Component {
         return (
             <div className="header">
                 <h1 className="inline text-white">{config.title}</h1>
-                <span className="position">
+                <Link className="position link" to='ChooseCity'>
                     <i className="text-white fa fa-2 fa-map-marker" aria-hidden="true"></i>
                     <span className="city">深圳</span>
-                </span>
+                </Link>
             </div>
         );
     }
