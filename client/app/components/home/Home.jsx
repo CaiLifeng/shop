@@ -4,7 +4,8 @@ import FilterBar from './FilterBar';
 import WeUI from 'react-weui';
 import axiosIns from '../../utils.js';
 import config from '../../config.js';
-import Header from './Header'
+import Header from './Header';
+import jsonp from 'jsonp'
 
 require('./../App.css');
 
@@ -63,30 +64,44 @@ export default class Home extends React.Component {
         });
     }
 
+
+    //根据城市获取所在地区列表
+    getRegions() {
+        let that=this;
+        axiosIns.get(config.apiUrl.regions+'?city='+this.props.location.query.city).then(function (data) {
+            if (data.resultCode == 1) {
+                let districts = data.data;
+                let filterDate = that.state.filterData.slice(0);
+                filterDate[0].data = filterDate[0].data.concat(districts);
+                that.setState({filterData: filterDate});
+            }
+            else {
+                console.log(data.resultMsg);
+            }
+        }).catch(function (error) {
+            console.log(error);
+        });
+    }
+
     //获取定位
-    getLocation() {
+    getCity() {
         const that = this;
         if ("geolocation" in navigator) {
             function success(position) {
                 let latitude = position.coords.latitude;
                 let longitude = position.coords.longitude;
-
-                getFilterData();
-                function getFilterData() {
-                    axiosIns.get(config.apiUrl.districts + '?latitude=' + latitude + '&longitude=' + longitude).then(function (data) {
-                        if (data.resultCode == 1) {
-                            let districts = data.data;
-                            let filterDate = that.state.filterData.slice(0);
-                            filterDate[0].data = filterDate[0].data.concat(districts);
-                            that.setState({filterData: filterDate});
+                jsonp('http://api.map.baidu.com/geocoder/v2/?output=json&ak=' + config.baiduKey + '&pois=0&location=' + latitude + ',' + longitude, null, function (err, data) {
+                    if (err) {
+                        alert(err.message);
+                    } else {
+                        if (data.status == 0) {
+                            that.setState({city: data.result.addressComponent.city});
                         }
                         else {
-                            console.log(data.resultMsg);
+                            alert('定位失败');
                         }
-                    }).catch(function (error) {
-                        console.log(error);
-                    });
-                }
+                    }
+                });
             }
 
             function error() {
@@ -100,8 +115,14 @@ export default class Home extends React.Component {
     }
 
     componentWillMount() {
+        if (this.props.location.query.city) {
+            this.setState({city: this.props.location.query.city});
+        }
+        else {
+            this.getCity();
+        }
+        this.getRegions();
         this.getProducts({pageIndex: 0});
-        this.getLocation();
     }
 
     filterBarSelectChange(data) {
@@ -145,7 +166,7 @@ export default class Home extends React.Component {
     render() {
         return (
             <div className="content">
-                <Header></Header>
+                <Header city={this.state.city}></Header>
                 <SearchBar onChange={this.handelSearch.bind(this)} onClear={this.handelClear.bind(this)}
                            placeholder="搜索标题"/>
                 <FilterBar data={this.state.filterData} onSelectChange={this.filterBarSelectChange.bind(this)}/>

@@ -70,9 +70,9 @@ export default class Publish extends React.Component {
                         location: location
                     });
                 })
-                    .catch(function (error) {
-                        console.log(error);
-                    });
+                .catch(function (error) {
+                    console.log(error);
+                });
             };
 
             function error() {

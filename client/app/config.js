@@ -11,11 +11,12 @@ const config = {
         geoCoder: 'http://api.map.baidu.com/geocoder/v2/',
         getVerifyCode: apiRoot + 'getVerifyCode',
         login: apiRoot + 'login',//登陆
-        region: apiRoot + 'region',//获取城市下面的地区
+        regions: apiRoot + 'regions',//获取城市下面的地区
         getQnToken: apiRoot + 'getQnToken',//获取七牛token
         getLocationInfo: apiRoot + 'getLocationInfo',//获取地址
         products: apiRoot + 'products',//新增产品
         provinces:apiRoot + 'provinces',//获取省份列表,
+        cities:apiRoot + 'cities',//获取省份列表,
         districts: apiRoot + 'districts',//获取所在城市下面的区列表,
         updateUserInfo: apiRoot + 'updateUserInfo',//更新用户信息
         userPublish: apiRoot + 'userPublish',//获取用户发布的产品列表

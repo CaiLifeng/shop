@@ -12,6 +12,7 @@ import Information from './components/Information';
 import UserCollect from './components/userCollect/UserCollect';
 import Personal from './components/personal/Personal';
 import UserPublish from './components/userPublish/UserPublish';
+import ChooseProvince from './components/chooseProvince/ChooseProvince';
 import ChooseCity from './components/chooseCity/ChooseCity';
 import axios from 'axios';
 
@@ -33,7 +34,8 @@ ReactDOM.render(
         <Route path="/product/:productId" component={ProductDetail}/>
         <Route path="/login" component={Login}/>
         <Route path="/regInfo" component={Information}/>
-        <Route path="/chooseCity" component={ChooseCity}/>
+        <Route path="/chooseProvince" component={ChooseProvince}/>
+        <Route path="/province/:id" component={ChooseCity}/>
     </Router>,
     document.body.appendChild(document.createElement('div'))
 );
