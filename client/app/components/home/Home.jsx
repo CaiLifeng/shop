@@ -44,12 +44,15 @@ export default class Home extends React.Component {
         }]
     };
 
-    getProducts({pageIndex=0, address='', category='', priceMin='', priceMax='',tradeType='',title='',pageSize=5}) {
+    getProducts({pageIndex = 0, address = '', category = '', priceMin = '', priceMax = '', tradeType = '', title = '', pageSize = 5}) {
         const that = this;
         let url = config.apiUrl.products + '?pageSize=' + pageSize + '&pageIndex=' + pageIndex + '&address=' + address + '&category=' + category + '&priceMin=' + priceMin + '&priceMax=' + priceMax + '&tradeType=' + tradeType + '&title=' + title;
         axiosIns.get(url).then(function (data) {
             if (data.resultCode == 1) {
                 if (data.pageCount === pageIndex + 1) {
+                    that.setState({isMore: false});
+                }
+                if(data.pageCount==0){
                     that.setState({isMore: false});
                 }
                 that.setState({
@@ -66,9 +69,9 @@ export default class Home extends React.Component {
 
 
     //根据城市获取所在地区列表
-    getRegions() {
-        let that=this;
-        axiosIns.get(config.apiUrl.regions+'?city='+this.props.location.query.city).then(function (data) {
+    getRegions(city) {
+        let that = this;
+        axiosIns.get(config.apiUrl.regions + '?city=' + city).then(function (data) {
             if (data.resultCode == 1) {
                 let districts = data.data;
                 let filterDate = that.state.filterData.slice(0);
@@ -96,6 +99,8 @@ export default class Home extends React.Component {
                     } else {
                         if (data.status == 0) {
                             that.setState({city: data.result.addressComponent.city});
+                            that.getRegions(data.result.addressComponent.city);
+                            that.getProducts({pageSize: 10, pageIndex: 0, address: data.result.addressComponent.city});
                         }
                         else {
                             alert('定位失败');
@@ -117,17 +122,17 @@ export default class Home extends React.Component {
     componentWillMount() {
         if (this.props.location.query.city) {
             this.setState({city: this.props.location.query.city});
+            this.getProducts({pageSize: 10, pageIndex: 0, address: this.props.location.query.city});
+            this.getRegions(this.props.location.query.city);
         }
         else {
             this.getCity();
         }
-        this.getRegions();
-        this.getProducts({pageIndex: 0});
     }
 
     filterBarSelectChange(data) {
         this.setState({productList: []});
-        let params = {pageSize: 10, pageIndex: 0};
+        let params = {pageSize: 10, pageIndex: 0, address: this.state.city};
         data.forEach(function (item, index, array) {
             if (item.type == 'price') {
                 if (item.selected !== '不限') {
@@ -139,12 +144,7 @@ export default class Home extends React.Component {
                 params[item.type] = item.selected == '不限' ? '' : item.selected;
             }
         });
-        console.log(params);
         this.getProducts(params);
-    }
-
-    onMoreClick() {
-        this.getProducts();
     }
 
     handelSearch(text) {
@@ -152,7 +152,7 @@ export default class Home extends React.Component {
         if (this.state.searchText !== text) {
             this.state.productList = [];
             this.state.searchText = text;
-            this.getProducts({title: this.state.searchText});
+            this.getProducts({title: this.state.searchText, pageSize: 10, pageIndex: 0, address: this.state.city});
         }
 
     }

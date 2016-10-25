@@ -3,6 +3,7 @@ import config from '../../config.js'
 import axiosIns from '../../utils.js';
 import axios from 'axios';
 import Qiniu from 'qiniu.js';
+import jsonp from 'jsonp';
 import {
     Form,
     FormCell,
@@ -61,17 +62,21 @@ export default class Publish extends React.Component {
                 var latitude = position.coords.latitude;
                 var longitude = position.coords.longitude;
                 this.setState({latitude: position.coords.latitude, longitude: position.coords.longitude});
-                axiosIns.post(config.apiUrl.getLocationInfo, {
-                    latitude: latitude,
-                    longitude: longitude
-                }).then(function (data) {
-                    let location = data.data.addressComponent.province + data.data.addressComponent.city + data.data.addressComponent.district;
-                    that.setState({
-                        location: location
-                    });
-                })
-                .catch(function (error) {
-                    console.log(error);
+                jsonp('http://api.map.baidu.com/geocoder/v2/?output=json&ak=' + config.baiduKey + '&pois=0&location=' + latitude + ',' + longitude, null, function (err, data) {
+                    if (err) {
+                        alert(err.message);
+                    } else {
+                        if (data.status == 0) {
+                            let location = data.result.addressComponent.province + data.result.addressComponent.city + data.result.addressComponent.district;
+                            that.setState({
+                                location: location
+                            });
+
+                        }
+                        else {
+                            console.log('获取位置失败');
+                        }
+                    }
                 });
             };
 

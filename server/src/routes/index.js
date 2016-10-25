@@ -12,8 +12,7 @@ var api = require('../api');
 router.post('/login', api.user.login);
 //获取验证码
 router.post('/getVerifyCode', api.user.getVerifyCode);
-//根据市获取区的列表
-router.get('/regions', api.common.getRegions);
+
 //新增产品
 router.post('/products', expressJwt({secret: config.secretKey}), middlewares.authError, api.product.add);
 //获取产品列表
@@ -22,10 +21,12 @@ router.get('/products', api.product.getProducts);
 router.get('/products/:productId',expressJwt({secret: config.secretKey}), middlewares.authError,  api.product.getProductById);
 //获取七牛token
 router.get('/getQnToken', expressJwt({secret: config.secretKey}), middlewares.authError, api.common.getQnToken);
-//获取位置
-router.post('/getLocationInfo',expressJwt({secret: config.secretKey}), middlewares.authError, api.common.getLocationInfo);
-//获取所在城市的区列表
-router.get('/districts',api.common.getDistricts);
+//获取省份列表
+router.get('/provinces',api.common.getProvinces);
+//根据省份获取城市列表
+router.get('/cities',api.common.getCities);
+//根据市获取区的列表
+router.get('/regions', api.common.getRegions);
 //更新用户信息
 router.post('/updateUserInfo',expressJwt({secret: config.secretKey}), middlewares.authError, api.user.update);
 //根据用户id获取用户信息

@@ -7,7 +7,6 @@ var Product = require('../models').Product;
 var config = require('../config');
 
 var product = {
-
     add: function (req, res, next) {
         if (!req.body.userId || !req.body.title || !req.body.price || !req.body.address || !req.body.description || !req.body.latitude || !req.body.longitude || !req.body.category) {
             return res.json({
@@ -31,16 +30,12 @@ var product = {
             images: req.body.images
         });
 
-
-        product.save(function (err) {
-            if (err) {
-                next(err);
-            }
-            else {
-                res.json({
-                    resultCode: 1
-                });
-            }
+        product.save().then(function () {
+            res.json({
+                resultCode: 1
+            });
+        }).catch(function (err) {
+            next(err);
         });
     },
 
@@ -108,41 +103,41 @@ var product = {
                     if (err) {
                         return next(err);
                     }
-                    if(user){
+                    if (user) {
                         product = product.toObject();
                         product.user = user;
-                        User.findById(req.user.userId,function(err,user){
-                            if(err){
+                        User.findById(req.user.userId, function (err, user) {
+                            if (err) {
                                 return next(err);
                             }
-                            if(user){
-                                if(product.userId==req.user.userId){
-                                    product.isCollect=2;
+                            if (user) {
+                                if (product.userId == req.user.userId) {
+                                    product.isCollect = 2;
                                 }
-                                else if(user.collect.indexOf(req.params.productId)>-1){
-                                    product.isCollect=1;
+                                else if (user.collect.indexOf(req.params.productId) > -1) {
+                                    product.isCollect = 1;
                                 }
-                                else{
-                                    product.isCollect=0;
+                                else {
+                                    product.isCollect = 0;
                                 }
                                 res.json({
                                     resultCode: 1,
                                     data: product
                                 });
                             }
-                            else{
+                            else {
                                 return res.json({
                                     resultCode: 0,
-                                    resultMsg:'找不到用户信息'
+                                    resultMsg: '找不到用户信息'
                                 });
                             }
                         });
 
                     }
-                    else{
+                    else {
                         res.json({
-                            resultCode:0,
-                            result:'找不到发布用户信息'
+                            resultCode: 0,
+                            result: '找不到发布用户信息'
                         });
                     }
 
@@ -151,8 +146,8 @@ var product = {
             }
             else {
                 res.json({
-                    resultCode:0,
-                    result:'找不到产品信息'
+                    resultCode: 0,
+                    result: '找不到产品信息'
                 });
             }
         });
@@ -193,24 +188,24 @@ var product = {
     },
 
     collect: function (req, res, next) {
-        if (!req.body.productId ) {
+        if (!req.body.productId) {
             return res.json({
                 resultCode: 0,
                 resultMsg: '缺少验证参数'
             });
         }
 
-        var userId=req.user.userId;
+        var userId = req.user.userId;
 
         User.findById(userId, function (err, user) {
             if (err) {
                 return next(err);
             }
             if (user) {
-                if(user.collect.indexOf(req.body.productId)>-1){
+                if (user.collect.indexOf(req.body.productId) > -1) {
                     return res.json({
                         resultCode: 0,
-                        resultMsg:'不能再次收藏'
+                        resultMsg: '不能再次收藏'
                     });
                 }
                 user.collect.push(req.body.productId);
@@ -243,7 +238,7 @@ var product = {
             });
         }
 
-        var userId=req.user.userId;
+        var userId = req.user.userId;
 
         User.findById(userId, function (err, user) {
             if (err) {
@@ -251,9 +246,9 @@ var product = {
             }
 
             if (user) {
-                var index=user.collect.indexOf(req.body.productId);
-                if(index>-1){
-                    user.collect.splice(index,1);
+                var index = user.collect.indexOf(req.body.productId);
+                if (index > -1) {
+                    user.collect.splice(index, 1);
                 }
 
                 user.save(function (err) {
@@ -284,9 +279,9 @@ var product = {
             });
         }
 
-        var userId=req.user.userId;
+        var userId = req.user.userId;
 
-        Product.remove({_id:req.body.productId,userId:userId}, function (err) {
+        Product.remove({_id: req.body.productId, userId: userId}, function (err) {
             if (err) {
                 return next(err);
             }
