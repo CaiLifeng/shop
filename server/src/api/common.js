@@ -56,17 +56,23 @@ var common = {
     getRegions: function (req, res, next) {
         var cityName = req.query.city;
         Area.findOne({name:cityName}).then(function(city){
-            var code=city.code;
-            return Area.find({pcode:code});
+            if(city){
+                var code=city.code;
+                return Area.find({pcode:code});
+            }
+            else{
+                res.json({
+                    resultCode: 0,
+                    resultMsg: '找不到此城市'
+                });
+                return Promise.reject();
+            }
         }).then(function(regions){
             var regionList = [];
             regions.forEach(function (item, index, array) {
                 regionList.push(item.name);
             });
-            res.json({
-                resultCode: 1,
-                data: regionList
-            });
+
         }).catch(function(err){
             next(err);
         });
