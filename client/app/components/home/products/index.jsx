@@ -1,5 +1,5 @@
 import React from 'react';
-import Product from '../../ProductItem';
+import Product from '../../productItem';
 
 export default class Products extends React.Component {
     static propTypes = {

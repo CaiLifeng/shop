@@ -72,6 +72,10 @@ var common = {
             regions.forEach(function (item, index, array) {
                 regionList.push(item.name);
             });
+            res.json({
+                resultCode:1,
+                data:regionList
+            });
 
         }).catch(function(err){
             next(err);

@@ -1,4 +1,12 @@
-import {SEARCH_TEXT_CHANGE,CLEAR_SEARCH,RECEIVE_PRODUCTS,GET_CITY_SUCCESS,GET_REGION_SUCCESS} from '../constants/ActionTypes'
+import {
+    SEARCH_TEXT_CHANGE,
+    CLEAR_SEARCH,
+    RECEIVE_PRODUCTS,
+    GET_CITY_SUCCESS,
+    GET_REGION_SUCCESS,
+    FILTER_BAR_CHANGE,
+    CLEAR_PRODUCTS
+} from '../constants/ActionTypes'
 import config from '../config.js';
 import axiosIns from '../utils.js';
 import jsonp from 'jsonp';
@@ -16,22 +24,31 @@ export const clearSearch = () => ({
 });
 
 //从后端获取到产品列表
-export const receiveProducts=(data)=>({
-    type:RECEIVE_PRODUCTS,
+export const receiveProducts = (data)=>({
+    type: RECEIVE_PRODUCTS,
     data
 });
 
 //获取定位城市成功
-export const getCitySuccess=(data)=>({
-    type:GET_CITY_SUCCESS,
+export const getCitySuccess = (data)=>({
+    type: GET_CITY_SUCCESS,
     data
 });
 
 //根据城市获取区成功
-export const getRegionSuccess=(data)=>({
-    type:GET_REGION_SUCCESS,
+export const getRegionSuccess = (data)=>({
+    type: GET_REGION_SUCCESS,
     data
-})
+});
+//搜索栏改变
+export const filterBarChange = (data)=>({
+    type: FILTER_BAR_CHANGE,
+    data
+});
+//将产品列表清空
+export const clearProducts = ()=>({
+    type:CLEAR_PRODUCTS
+});
 
 //获取产品
 export const getProducts = ({pageIndex = 0, address = '', category = '', priceMin = '', priceMax = '', tradeType = '', title = '', pageSize = 5}) => dispatch => {
@@ -60,10 +77,6 @@ export const getCity = () => dispatch => {
                 } else {
                     if (data.status == 0) {
                         dispatch(getCitySuccess(data.result.addressComponent.city));
-                        // that.getProducts({pageSize: 10, pageIndex: 0, address: data.result.addressComponent.city});
-                        // that.setState({city: data.result.addressComponent.city});
-                        // that.getRegions(data.result.addressComponent.city);
-                        // that.getProducts({pageSize: 10, pageIndex: 0, address: data.result.addressComponent.city});
                     }
                     else {
                         alert('定位失败');
@@ -74,20 +87,19 @@ export const getCity = () => dispatch => {
         function error() {
             alert('定位失败');
         }
+
         navigator.geolocation.getCurrentPosition(success, error);
     } else {
         alert('您的浏览器不支持定位');
     }
 };
 
-export const getRegion = (city) =>dispatch =>{
+//获取城市下面的区列表
+export const getRegion = (city) =>dispatch => {
     axiosIns.get(config.apiUrl.regions + '?city=' + city).then(function (data) {
         if (data.resultCode == 1) {
-            dispatch(getRegionSuccess(data));
-            // let districts = data.data;
-            // let filterDate = that.state.filterData.slice(0);
-            // filterDate[0].data = filterDate[0].data.concat(districts);
-            // that.setState({filterData: filterDate});
+            dispatch(clearProducts());
+            dispatch(getRegionSuccess(data.data));
         }
         else {
             console.log(data.resultMsg);
@@ -95,4 +107,4 @@ export const getRegion = (city) =>dispatch =>{
     }).catch(function (error) {
         console.log(error);
     });
-}
+};

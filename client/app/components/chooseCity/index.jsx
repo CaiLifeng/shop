@@ -31,7 +31,7 @@ export default class ChooseCity extends React.Component {
         let that = this;
         let cityList = this.state.cities.map(function (item, idx) {
             return (
-                <Link className="weui_cell" to={{pathname:'/',query:{city:item.name}}}>
+                <Link key={idx} className="weui_cell" to={{pathname:'/',query:{city:item.name}}}>
                     <div className="weui_cell_hd"></div>
                     <div className="weui_cell_bd weui_cell_primary">
                         <p>{item.name}</p>

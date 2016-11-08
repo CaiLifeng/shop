@@ -1,4 +1,4 @@
-import {SEARCH_TEXT_CHANGE,CLEAR_SEARCH,RECEIVE_PRODUCTS,GET_CITY_SUCCESS,GET_REGION_SUCCESS,FILTER_BAR_CHANGE,CLEAR_PRODUCTS} from '../constants/ActionTypes'
+import {SEARCH_TEXT_CHANGE,CLEAR_SEARCH,RECEIVE_PRODUCTS,GET_CITY_SUCCESS,GET_REGION_SUCCESS,FILTER_BAR_CHANGE} from '../constants/ActionTypes'
 import config from '../config.js';
 import _ from 'lodash';
 
@@ -36,7 +36,7 @@ const initialState = {
     }]
 };
 
-const home = (state = initialState, action) => {
+const chooseProvince = (state = initialState, action) => {
     let newState=_.cloneDeep(state);
     switch (action.type) {
         //搜索框中改变
@@ -70,15 +70,10 @@ const home = (state = initialState, action) => {
             newState.filterData=action.data;
             return newState;
             break;
-        //清空产品列表
-        case CLEAR_PRODUCTS:
-            newState.productList=[];
-            return newState;
-            break;
         default:
             return state
     }
 };
 
-export {home};
+export {chooseProvince};
 

@@ -1,7 +1,4 @@
-/**
- * Created by clf on 2016/8/29.
- */
-import Product from './publishProductItem';
+import PublishProduct from './publishProductItem';
 import React from 'react';
 import axiosIns from '../../utils.js';
 import config from '../../config.js';
@@ -93,10 +90,10 @@ export default class UserPublish extends React.Component {
                 {
                     this.state.productList.map(function (item, idx) {
                         return (
-                            <Product delCallBack={that.handleDelCallBack.bind(that)} imgSrc={item.images[0]} key={idx}
+                            <PublishProduct delCallBack={that.handleDelCallBack.bind(that)} imgSrc={item.images[0]} key={idx}
                                      id={item._id} price={item.price}
                                      category={item.category} title={item.title}
-                                     createTime={item.createTime}></Product>
+                                     createTime={item.createTime}/>
                         );
                     })
                 }

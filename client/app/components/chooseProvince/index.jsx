@@ -2,11 +2,10 @@ import React from 'react';
 import config from '../../config.js'
 import axiosIns from '../../utils.js';
 import { Router, Route, Link } from 'react-router';
-import axios from 'axios';
 import jsonp from 'jsonp';
 import './index.less';
 
-export default class ChooseCity extends React.Component {
+export default class ChooseProvince extends React.Component {
     state = {
         city: '',
         provinces: [],
@@ -88,7 +87,7 @@ export default class ChooseCity extends React.Component {
         let provinceList = this.state.provinces.map(function (item, idx) {
             let url='province/'+item.code;
             return (
-                <Link to={url} className="weui_cell link">
+                <Link to={url} key={idx} className="weui_cell link">
                     <div className="weui_cell_hd"></div>
                     <div className="weui_cell_bd weui_cell_primary">
                         <p>{item.name}</p>

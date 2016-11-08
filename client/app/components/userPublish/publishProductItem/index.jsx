@@ -5,7 +5,7 @@ import {Toast,Dialog} from 'react-weui';
 
 const {Alert, Confirm} = Dialog;
 
-export default class Product extends React.Component {
+export default class PublishProduct extends React.Component {
     static propTypes = {
         id: React.PropTypes.string,
         imgSrc: React.PropTypes.string,

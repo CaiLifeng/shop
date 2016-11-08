@@ -1,5 +1,6 @@
 import React from 'react';
-import './index.less'
+import _ from 'lodash';
+import './index.less';
 
 export default class FilterBar extends React.Component {
     static propTypes = {
@@ -14,18 +15,17 @@ export default class FilterBar extends React.Component {
 
     state = {
         index: 0,
-        focus: false,
-        data: this.props.data
+        focus: false
     };
 
     handleExpandItemClick(idx, subItem, event) {
-        let newState = Object.assign({}, this.state);
-        newState.data[idx].selected = subItem;
-        this.setState(newState);
+        let newData = _.cloneDeep(this.props.data);
+        newData[idx].selected = subItem;
         if (this.props.onSelectChange) {
-            this.props.onSelectChange(this.state.data);
+            this.props.onSelectChange(newData);
         }
     }
+
 
     handleHeaderClick(idx) {
         if (this.state.index == idx) {
@@ -43,18 +43,22 @@ export default class FilterBar extends React.Component {
 
     renderCloseItems(data) {
         let items = data.map((item, idx)=> {
-            return (<li className="tab" style={{color:(this.state.index==item.id&&this.state.focus)?'red' : 'black'}} key={idx} onClick={this.handleHeaderClick.bind(this,item.id)}>
-                <span className="nav-font">{item.selected ? item.selected : item.name}</span>
-                <span className="icon-right">
-                    {(this.state.index==item.id&&this.state.focus)?<i className="fa fa-angle-up" aria-hidden="true"></i>:<i className="fa fa-angle-down" aria-hidden="true"></i>}
+            return (
+                <li className="tab" style={{color: (this.state.index == item.id && this.state.focus) ? 'red' : 'black'}}
+                    key={idx} onClick={this.handleHeaderClick.bind(this, item.id)}>
+                    <span className="nav-font">{item.selected ? item.selected : item.name}</span>
+                    <span className="icon-right">
+                    {(this.state.index == item.id && this.state.focus) ?
+                        <i className="fa fa-angle-up" aria-hidden="true"/> :
+                        <i className="fa fa-angle-down" aria-hidden="true"/>}
                 </span>
-            </li>)
+                </li>)
         });
 
         return (
             <ul className="f-b-close">
                 {items}
-                <li className="clearfix"></li>
+                <li className="clearfix"/>
             </ul>
         );
     }
@@ -63,12 +67,12 @@ export default class FilterBar extends React.Component {
         let items = data.map((item, idx)=> {
             return (
                 <ul className="expand" key={idx} ref=""
-                    style={{display:(this.state.index==item.id&&this.state.focus)?'block' : 'none'}}>
+                    style={{display: (this.state.index == item.id && this.state.focus) ? 'block' : 'none'}}>
                     {
                         item.data.map((subItem, subIdx)=> {
                             return (
                                 <li className="tab" key={subIdx}
-                                    onClick={this.handleExpandItemClick.bind(this,idx,subItem)}>
+                                    onClick={this.handleExpandItemClick.bind(this, idx, subItem)}>
                                     {subItem}
                                 </li>
                             )
@@ -78,20 +82,18 @@ export default class FilterBar extends React.Component {
             )
         });
         return (
-            <div className="expand_b" style={{display:(this.state.index!=0&&this.state.focus)?'block' : 'none'}}
-                 onClick={this.handleHeaderClick.bind(this,0)}>
+            <div className="expand_b" style={{display: (this.state.index != 0 && this.state.focus) ? 'block' : 'none'}}
+                 onClick={this.handleHeaderClick.bind(this, 0)}>
                 {items}
             </div>
         );
     }
 
     render() {
-        const {data,onSelectChange, ...others} = this.props;
-
         return (
             <div className="filter-bar">
-                {this.renderCloseItems(data)}
-                {this.renderExpendItems(data)}
+                {this.renderCloseItems(this.props.data)}
+                {this.renderExpendItems(this.props.data)}
             </div>
 
         );
