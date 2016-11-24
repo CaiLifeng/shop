@@ -2,7 +2,6 @@ import React from 'react';
 import Products from './products';
 import FilterBar from './filterBar';
 import WeUI from 'react-weui';
-import axiosIns from '../../utils.js';
 import config from '../../config.js';
 import Header from './header';
 import jsonp from 'jsonp';

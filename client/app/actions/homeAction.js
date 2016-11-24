@@ -5,7 +5,10 @@ import {
     GET_CITY_SUCCESS,
     GET_REGION_SUCCESS,
     FILTER_BAR_CHANGE,
-    CLEAR_PRODUCTS
+    CLEAR_PRODUCTS,
+    FETCH_PRODUCTS_REQUEST,
+    FETCH_PRODUCTS_FAILURE,
+    FETCH_PRODUCTS_SUCCESS
 } from '../constants/ActionTypes'
 import config from '../config.js';
 import axiosIns from '../utils.js';
@@ -29,6 +32,25 @@ export const receiveProducts = (data)=>({
     data
 });
 
+//开始发产品请求
+export const fetchProductsRequest = (data)=>({
+    type: FETCH_PRODUCTS_REQUEST,
+    data
+});
+
+//请求产品列表成功
+export const fetchProductsSuccess = (data)=>({
+    type: FETCH_PRODUCTS_SUCCESS,
+    data
+});
+
+//请求产品失败
+export const fecthProductsFaile = (data)=>({
+    type: FETCH_PRODUCTS_FAILURE,
+    data
+});
+
+
 //获取定位城市成功
 export const getCitySuccess = (data)=>({
     type: GET_CITY_SUCCESS,
@@ -47,7 +69,7 @@ export const filterBarChange = (data)=>({
 });
 //将产品列表清空
 export const clearProducts = ()=>({
-    type:CLEAR_PRODUCTS
+    type: CLEAR_PRODUCTS
 });
 
 //获取产品
@@ -71,7 +93,7 @@ export const getCity = () => dispatch => {
         function success(position) {
             let latitude = position.coords.latitude;
             let longitude = position.coords.longitude;
-            jsonp('http://api.map.baidu.com/geocoder/v2/?output=json&ak=' + config.baiduKey + '&pois=0&location=' + latitude + ',' + longitude, null, function (err, data) {
+            return jsonp('http://api.map.baidu.com/geocoder/v2/?output=json&ak=' + config.baiduKey + '&pois=0&location=' + latitude + ',' + longitude, null, function (err, data) {
                 if (err) {
                     alert(err.message);
                 } else {
@@ -84,6 +106,7 @@ export const getCity = () => dispatch => {
                 }
             });
         }
+
         function error() {
             alert('定位失败');
         }
@@ -96,7 +119,7 @@ export const getCity = () => dispatch => {
 
 //获取城市下面的区列表
 export const getRegion = (city) =>dispatch => {
-    axiosIns.get(config.apiUrl.regions + '?city=' + city).then(function (data) {
+    return axiosIns.get(config.apiUrl.regions + '?city=' + city).then(function (data) {
         if (data.resultCode == 1) {
             dispatch(clearProducts());
             dispatch(getRegionSuccess(data.data));

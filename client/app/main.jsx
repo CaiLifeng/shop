@@ -53,3 +53,7 @@ ReactDOM.render(
     </Provider>,
     document.body.appendChild(document.createElement('div'))
 );
+
+if (module.hot) {
+  module.hot.accept();
+}
