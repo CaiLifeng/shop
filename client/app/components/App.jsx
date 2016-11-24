@@ -1,9 +1,6 @@
 import React from 'react';
-import WeUI from 'react-weui';
-import NavBar from './NavBar';
+import NavBar from './navBar/index';
 require('./App.css');
-
-const {SearchBar} = WeUI;
 
 export default class App extends React.Component {
   render() {
